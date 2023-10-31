@@ -3,6 +3,7 @@ package com.example.be_kwangwoon.domain.department.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,4 +18,10 @@ public class Department {
     @Column(name = "department_id")
     private Long id;
     private String name;
+
+    @Builder
+    public Department(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

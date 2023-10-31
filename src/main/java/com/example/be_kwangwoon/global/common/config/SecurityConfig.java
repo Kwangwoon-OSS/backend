@@ -1,6 +1,7 @@
 package com.example.be_kwangwoon.global.common.config;
 
 
+import com.example.be_kwangwoon.global.common.jwt.JwtAuthenticationFilter;
 import com.example.be_kwangwoon.global.common.jwt.JwtAuthorizationFilter;
 import com.example.be_kwangwoon.global.common.jwt.JwtProvider;
 import com.example.be_kwangwoon.global.common.response.SecurityResponse;
@@ -28,6 +29,9 @@ public class SecurityConfig {
         @Override
         public void configure(HttpSecurity http) {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtProvider);
+            jwtAuthenticationFilter.setFilterProcessesUrl("/users/login");
+            http.addFilter(jwtAuthenticationFilter);
             http.addFilter(new JwtAuthorizationFilter(authenticationManager, jwtProvider));
         }
     }
