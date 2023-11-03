@@ -40,15 +40,15 @@ public class Post {
     private Subject subject;
 
     @CreatedDate
-    @Column(updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createAt;
 
     @LastModifiedDate
+    @Column(name = "updated_at")
     private LocalDateTime updateAt;
 
     @Builder
-    public Post(Long id, String title, String content, Status status, LocalDateTime deadline, int views, String contact, int people, User user, Subject subject, LocalDateTime createAt, LocalDateTime updateAt) {
-        this.id = id;
+    public Post(String title, String content, Status status, LocalDateTime deadline, int views, String contact, int people, User user, Subject subject) {
         this.title = title;
         this.content = content;
         this.status = status;
@@ -58,7 +58,5 @@ public class Post {
         this.people = people;
         this.user = user;
         this.subject = subject;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
     }
 }
