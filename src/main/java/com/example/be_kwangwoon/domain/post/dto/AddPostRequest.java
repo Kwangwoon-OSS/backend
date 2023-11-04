@@ -6,6 +6,7 @@ import com.example.be_kwangwoon.domain.post.domain.Status;
 import com.example.be_kwangwoon.domain.subject.domain.Subject;
 import com.example.be_kwangwoon.domain.user.domain.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,6 @@ import java.time.LocalDateTime;
 @Getter
 public class AddPostRequest {
 
-    private Long id;
     private String title;
     private String content;
     private Status status;
@@ -24,8 +24,9 @@ public class AddPostRequest {
     private int views;
     private String contact;
     private int people;
+    private Long subjectId;
 
-    public Post toEntity(User user, Subject subject) {
+    public Post toEntity(User user,Subject subject) {
         return Post.builder()
                 .title(title)
                 .content(content)

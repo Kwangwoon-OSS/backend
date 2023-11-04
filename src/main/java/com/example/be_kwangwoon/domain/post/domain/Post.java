@@ -1,5 +1,6 @@
 package com.example.be_kwangwoon.domain.post.domain;
 
+import com.example.be_kwangwoon.domain.post.dto.UpdatePostRequest;
 import com.example.be_kwangwoon.domain.subject.domain.Subject;
 import com.example.be_kwangwoon.domain.user.domain.User;
 import jakarta.persistence.*;
@@ -57,6 +58,16 @@ public class Post {
         this.contact = contact;
         this.people = people;
         this.user = user;
+        this.subject = subject;
+    }
+
+    public void updatePost(UpdatePostRequest request, Subject subject) {
+        this.title = request.getTitle();
+        this.content = request.getContent();
+        this.status = request.getStatus();
+        this.deadline = request.getDeadline();
+        this.contact = request.getContact();
+        this.people = request.getPeople();
         this.subject = subject;
     }
 }
