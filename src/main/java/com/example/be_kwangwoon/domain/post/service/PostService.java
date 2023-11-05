@@ -40,9 +40,9 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public void deletePost(long id) {
+    public void deletePost(long id, User user) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found : " + id));
-        //authorizeAuthor(post, id);
+        authorizeAuthor(post, user.getId());
         postRepository.deleteById(id);
     }
 
@@ -63,9 +63,9 @@ public class PostService {
         return post;
     }
 
-    private static void authorizeAuthor(Post post, long id) {
-        long userId = post.getUser().getId();
-        if (userId != id) {
+    private static void authorizeAuthor(Post post, long userid) {
+        long puserId = post.getUser().getId();
+        if (puserId != userid) {
             throw new IllegalArgumentException("not authorized");
         }
     }
