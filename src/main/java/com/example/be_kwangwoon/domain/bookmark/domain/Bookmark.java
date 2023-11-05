@@ -36,4 +36,10 @@ public class Bookmark {
         this.user = user;
         this.post = post;
     }
+
+    @Builder
+    public Bookmark(User user, Post post){
+        this.user = user;
+        this.post = post;
+    }
 }

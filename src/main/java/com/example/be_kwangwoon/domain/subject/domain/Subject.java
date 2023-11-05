@@ -46,4 +46,10 @@ public class Subject {
         this.semester = semester;
         this.professor = professor;
     }
+
+    @Builder
+    public Subject(String name, String code) {
+        this.name = name;
+        this.code = code;
+    }
 }

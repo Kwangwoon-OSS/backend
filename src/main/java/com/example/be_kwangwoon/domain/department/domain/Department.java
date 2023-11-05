@@ -24,4 +24,9 @@ public class Department {
         this.id = id;
         this.name = name;
     }
+
+    @Builder
+    public Department(String name) {
+        this.name = name;
+    }
 }

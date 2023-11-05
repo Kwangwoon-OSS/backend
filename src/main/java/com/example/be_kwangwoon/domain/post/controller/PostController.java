@@ -65,4 +65,15 @@ public class PostController {
         return ResponseEntity.ok()
                 .build();
     }
+
+    @GetMapping("/posts/newposts")
+    public ResponseEntity<List<PostResponse>> findNewPost() {
+        List<PostResponse> post = postService.findNewPost()
+                .stream()
+                .map(PostResponse::new)
+                .toList();
+        return ResponseEntity.ok()
+                .body(post);
+    }
+
 }

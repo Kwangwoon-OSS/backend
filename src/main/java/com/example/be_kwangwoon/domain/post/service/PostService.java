@@ -10,6 +10,8 @@ import com.example.be_kwangwoon.domain.user.domain.User;
 import com.example.be_kwangwoon.global.common.exception.CustomException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,8 +42,15 @@ public class PostService {
 
     public void deletePost(long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found : " + id));
-        authorizeAuthor(post, id);
+        //authorizeAuthor(post, id);
         postRepository.deleteById(id);
+    }
+
+    public List<Post> findNewPost() {
+        List<Post> list = postRepository.findAll(PageRequest.of(0, 2, Sort.by("createAt").descending())).
+                stream().
+                toList();
+        return list;
     }
 
     @Transactional
