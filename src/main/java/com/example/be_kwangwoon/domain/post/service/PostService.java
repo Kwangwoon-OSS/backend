@@ -7,7 +7,9 @@ import com.example.be_kwangwoon.domain.post.repository.PostRepository;
 import com.example.be_kwangwoon.domain.subject.domain.Subject;
 import com.example.be_kwangwoon.domain.subject.repository.SubjectRepository;
 import com.example.be_kwangwoon.domain.user.domain.User;
+import com.example.be_kwangwoon.domain.user.repository.UserRepository;
 import com.example.be_kwangwoon.global.common.exception.CustomException;
+import com.example.be_kwangwoon.global.common.exception.ExceptionCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -16,18 +18,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.example.be_kwangwoon.global.common.exception.ExceptionCode.USER_NOT_FOUND;
-
 @RequiredArgsConstructor
 @Service
 public class PostService {
 
     private final PostRepository postRepository;
     private final SubjectRepository subjectRepository;
+    private final UserRepository userRepository;
 
-    public Post addPost(AddPostRequest request, User user) {
+
+    @Transactional
+    public void addPost(AddPostRequest request, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
         Subject subject = subjectRepository.findById(request.getSubjectId()).orElseThrow(() -> new IllegalArgumentException("not found : " + request.getSubjectId()));
-        return postRepository.save(request.toEntity(user, subject));
+         postRepository.save(request.toEntity(user, subject));
     }
 
 

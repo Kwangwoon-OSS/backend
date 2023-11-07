@@ -27,10 +27,10 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public ResponseEntity<Post> addPost(@RequestBody AddPostRequest request, @AuthenticationPrincipal User user) {
-        Post addedPost = postService.addPost(request, user);
+    public ResponseEntity<Void> addPost(@RequestBody AddPostRequest request, @AuthenticationPrincipal User user) {
+        postService.addPost(request, user.getId());
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(addedPost);
+                .build();
     }
 
     @PutMapping("/posts/{id}")
