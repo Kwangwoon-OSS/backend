@@ -36,7 +36,7 @@ public class UserController {
     @Operation(summary = "회원가입")
     @ApiResponse(responseCode = "204", description = "회원가입 성공")
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
+    public ResponseEntity<Void> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
         userService.signUp(userSignUpRequest);
         return ResponseEntity.noContent().build();
     }
