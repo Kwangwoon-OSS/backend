@@ -10,7 +10,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@OpenAPIDefinition(servers = {@Server(url = "https://www.petmily.site", description = "production server url"),
+@OpenAPIDefinition(servers = {@Server(url = "http://together-env.eba-idjepbda.ap-northeast-2.elasticbeanstalk.com/", description = "production server url"),
         @Server(url = "http://localhost:8080", description = "dev server url")
 })
 @Configuration
