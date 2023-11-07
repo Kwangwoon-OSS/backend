@@ -7,21 +7,22 @@ import lombok.Getter;
 @Getter
 public class UserProfileResponse {
     private final String nickname;
-    private final String email;
     private final String departmentName;
+    private final String introduction;
 
     public static UserProfileResponse from(User user) {
         return UserProfileResponse.builder()
                 .nickname(user.getNickname())
-                .email(user.getEmail())
                 .departmentName(user.getDepartment().getName())
+                .introduction(user.getIntroduction())
                 .build();
+
     }
 
     @Builder
-    public UserProfileResponse(String nickname, String email, String departmentName) {
+    public UserProfileResponse(String nickname, String departmentName, String introduction) {
         this.nickname = nickname;
-        this.email = email;
         this.departmentName = departmentName;
+        this.introduction = introduction;
     }
 }
