@@ -45,9 +45,9 @@ public class Subject {
         this.professor = professor;
     }
 
-//    @Builder
-//    public Subject(String name, String code) {
-//        this.name = name;
-//        this.code = code;
-//    }
+    @Builder
+    public Subject(String name, String code) {
+        this.name = name;
+        this.code = code;
+    }
 }
