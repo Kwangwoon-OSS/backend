@@ -308,8 +308,8 @@ public class PostAPITest {
 
     void createDefaultSubject() {
         subjectRepository.deleteAll();
-        sb1 = new Subject("math", "0000");
-        sb2 = new Subject("English", "0001");
+//        sb1 = new Subject("math", "0000");
+//        sb2 = new Subject("English", "0001");
 
         subjectRepository.save(sb1);
         subjectRepository.save(sb2);

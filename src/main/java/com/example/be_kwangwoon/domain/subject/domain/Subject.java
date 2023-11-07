@@ -9,12 +9,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "subjects")
 public class Subject {
 
@@ -29,14 +27,14 @@ public class Subject {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "semester_id")
-    private Semester semester;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professor_id")
     private Professor professor;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "semester_id")
+    private Semester semester;
     @Builder
     public Subject(Long id, String name, String code, Department department, Semester semester, Professor professor) {
         this.id = id;
@@ -47,9 +45,9 @@ public class Subject {
         this.professor = professor;
     }
 
-    @Builder
-    public Subject(String name, String code) {
-        this.name = name;
-        this.code = code;
-    }
+//    @Builder
+//    public Subject(String name, String code) {
+//        this.name = name;
+//        this.code = code;
+//    }
 }
