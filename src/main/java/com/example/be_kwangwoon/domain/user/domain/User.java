@@ -39,6 +39,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Certification isCertification;
+    
     private String introduction;
 
 
