@@ -1,6 +1,9 @@
 package com.example.be_kwangwoon.domain.comment.domain;
 
 
+import com.example.be_kwangwoon.domain.comment.dto.UpdateCommentRequest;
+import com.example.be_kwangwoon.domain.post.domain.Post;
+import com.example.be_kwangwoon.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,6 +31,14 @@ public class Comment {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 
@@ -44,13 +55,20 @@ public class Comment {
     private LocalDateTime updateAt;
 
     @Builder
-    public Comment(Long id, String content, Comment parentComment, List<Comment> childComments, Used used, LocalDateTime createAt, LocalDateTime updateAt) {
-        this.id = id;
+    public Comment(String content, Comment parentComment, User user, Post post, Used used) {
         this.content = content;
+        this.user = user;
+        this.post = post;
         this.parentComment = parentComment;
-        this.childComments = childComments;
         this.used = used;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
+    }
+
+    public void updateComment(UpdateCommentRequest request) {
+        this.content = request.getContent();
+        this.used = request.getUsed();
+    }
+
+    public void updateChild(Comment comment) {
+        childComments.add(comment);
     }
 }

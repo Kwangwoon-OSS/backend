@@ -2,6 +2,12 @@ package com.example.be_kwangwoon;
 
 import com.example.be_kwangwoon.domain.bookmark.domain.Bookmark;
 import com.example.be_kwangwoon.domain.bookmark.repository.BookmarkRepository;
+import com.example.be_kwangwoon.domain.comment.domain.Comment;
+import com.example.be_kwangwoon.domain.comment.domain.Used;
+import com.example.be_kwangwoon.domain.comment.dto.AddCommentRequest;
+import com.example.be_kwangwoon.domain.comment.dto.CommentResponse;
+import com.example.be_kwangwoon.domain.comment.dto.UpdateCommentRequest;
+import com.example.be_kwangwoon.domain.comment.repository.CommentRepository;
 import com.example.be_kwangwoon.domain.department.domain.Department;
 import com.example.be_kwangwoon.domain.department.repository.DepartmentRepository;
 import com.example.be_kwangwoon.domain.post.domain.Post;
@@ -28,9 +34,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -68,6 +76,9 @@ public class PostAPITest {
 
     @Autowired
     BookmarkRepository bookmarkRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
 
     User user;
     Subject sb1;
@@ -275,6 +286,151 @@ public class PostAPITest {
         bookmarkRepository.deleteAll();
     }
 
+    @DisplayName("addComment: 댓글을 다는데 성공")
+    @Test
+    public void addComment() throws Exception {
+        final String url = "/posts/{postId}/comment";
+
+        Post post = createDefaultPost(LocalDateTime.MIN);
+
+        AddCommentRequest userRequest = new AddCommentRequest("content", (long) 0, Used.Y);
+
+        String requestBody = objectMapper.writeValueAsString(userRequest);
+
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("username");
+
+        ResultActions resultActions = mockMvc.perform(post(url, post.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .principal(principal)
+                .content(requestBody));
+
+        List<Comment> list = commentRepository.findAll();
+
+        resultActions.andExpect(status().isCreated());
+        assertThat(list.get(0).getContent()).isEqualTo("content");
+
+        userRequest = new AddCommentRequest("content2", list.get(0).getId(), Used.Y);
+
+        requestBody = objectMapper.writeValueAsString(userRequest);
+
+        resultActions = mockMvc.perform(post(url, post.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .principal(principal)
+                .content(requestBody));
+
+        list = commentRepository.findAll();
+
+        resultActions.andExpect(status().isCreated());
+        assertThat(list.get(0).getContent()).isEqualTo("content");
+        assertThat(list.get(1).getContent()).isEqualTo("content2");
+
+        commentRepository.deleteAll();
+    }
+
+    @DisplayName("updateComment: 댓글을 수정하는데 성공")
+    @Test
+    public void updateComment() throws Exception {
+        final String url = "/posts/{postId}/{commentId}";
+
+        Post post = createDefaultPost(LocalDateTime.MIN);
+        Comment comment = createDefaultComment(null, post);
+
+        final String content = "helloworld";
+        final Used used = Used.N;
+
+        UpdateCommentRequest request = new UpdateCommentRequest(content, used);
+
+        ResultActions result = mockMvc.perform(put(url, post.getId(), comment.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request)));
+
+        result.andExpect(status().isOk());
+
+        List<Comment> list = commentRepository.findAll();
+        assertThat(list.get(0).getContent()).isEqualTo("helloworld");
+        assertThat(list.get(0).getUsed()).isEqualTo(Used.N);
+        commentRepository.deleteAll();
+    }
+
+    @DisplayName("findAllComment: 댓글을 모두 가져오는데 성공")
+    @Test
+    public void findAllComment() throws Exception {
+        final String url = "/posts/{postId}/comment";
+        final String url2 = "/posts/{postId}/comment";
+
+        Post post = createDefaultPost(LocalDateTime.MIN);
+
+        AddCommentRequest userRequest = new AddCommentRequest("content", (long) 0, Used.Y);
+
+        String requestBody = objectMapper.writeValueAsString(userRequest);
+
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("username");
+
+        ResultActions resultActions = mockMvc.perform(post(url, post.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .principal(principal)
+                .content(requestBody));
+
+        List<Comment> list = commentRepository.findAll();
+
+        resultActions.andExpect(status().isCreated());
+        assertThat(list.get(0).getContent()).isEqualTo("content");
+
+        userRequest = new AddCommentRequest("content2", list.get(0).getId(), Used.Y);
+
+        requestBody = objectMapper.writeValueAsString(userRequest);
+
+        resultActions = mockMvc.perform(post(url, post.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .principal(principal)
+                .content(requestBody));
+
+        resultActions = mockMvc.perform(get(url2, post.getId())
+                .accept(MediaType.APPLICATION_JSON));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].content").value("content"))
+                .andExpect(jsonPath("$[1].content").value("content2"));
+
+        MvcResult mvcResult = resultActions.andReturn();
+        String jsonResponse = mvcResult.getResponse().getContentAsString();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<CommentResponse> comments = objectMapper.readValue(jsonResponse, new TypeReference<List<CommentResponse>>() {
+        });
+
+        CommentResponse firstComment = null;
+        if (!comments.isEmpty()) {
+            firstComment = comments.get(0);
+        }
+        List<Long> childs = firstComment.getChildsIds();
+        Comment comment = commentRepository.findById(childs.get(0)).orElseThrow(() -> new IllegalArgumentException("not found : " + childs.get(0)));
+        assertThat(comment.getContent()).isEqualTo("content2");
+        commentRepository.deleteAll();
+    }
+
+    Comment createDefaultComment(Comment comment, Post post) {
+        return commentRepository.save(Comment.builder()
+                .content("content")
+                .user(user)
+                .post(post)
+                .parentComment(comment)
+                .used(Used.Y)
+                .build());
+    }
+
+    Comment createDefaultComment(String content, Comment comment, Post post) {
+        return commentRepository.save(Comment.builder()
+                .content(content)
+                .user(user)
+                .post(post)
+                .parentComment(comment)
+                .used(Used.Y)
+                .build());
+    }
 
     Post createDefaultPost(LocalDateTime localDateTime) {
         return postRepository.save(Post.builder()
