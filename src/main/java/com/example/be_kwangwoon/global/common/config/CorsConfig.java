@@ -19,7 +19,7 @@ public class CorsConfig {
         corsConfig.addAllowedHeader("*");
         corsConfig.addAllowedMethod("*");
         corsConfig.setAllowedMethods(Arrays.asList("POST", "GET", "DELETE", "PUT"));
-        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5500", "*"));
+        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5500", "http://127.0.0.1:5500"));
         corsConfig.setAllowedHeaders(List.of("Authorization"));
         corsConfig.addExposedHeader(HttpHeaders.AUTHORIZATION);
         corsConfig.setAllowCredentials(true);
