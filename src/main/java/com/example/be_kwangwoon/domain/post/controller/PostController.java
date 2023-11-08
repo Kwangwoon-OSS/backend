@@ -34,12 +34,12 @@ public class PostController {
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable long id,
+    public ResponseEntity<Void> updatePost(@PathVariable long id,
                                            @RequestBody UpdatePostRequest request) {
-        Post updatedPost = postService.updatePost(id, request);
+        postService.updatePost(id, request);
 
         return ResponseEntity.ok()
-                .body(updatedPost);
+                .build();
     }
 
     @GetMapping("/posts/{id}")

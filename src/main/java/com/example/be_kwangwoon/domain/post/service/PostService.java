@@ -31,9 +31,16 @@ public class PostService {
     public void addPost(AddPostRequest request, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
         Subject subject = subjectRepository.findById(request.getSubjectId()).orElseThrow(() -> new IllegalArgumentException("not found : " + request.getSubjectId()));
-         postRepository.save(request.toEntity(user, subject));
+        postRepository.save(request.toEntity(user, subject));
     }
 
+    @Transactional
+    public void updatePost(long id, UpdatePostRequest request) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found : " + id));
+        authorizeAuthor(post, id);
+        Subject subject = subjectRepository.findById(request.getSubjectId()).orElseThrow(() -> new IllegalArgumentException("not found : " + request.getSubjectId()));
+        post.updatePost(request, subject);
+    }
 
     public Post findPost(long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found : " + id));
@@ -55,16 +62,6 @@ public class PostService {
                 stream().
                 toList();
         return list;
-    }
-
-    @Transactional
-    public Post updatePost(long id, UpdatePostRequest request) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found : " + id));
-        authorizeAuthor(post, id);
-        Subject subject = subjectRepository.findById(request.getSubjectId()).orElseThrow(() -> new IllegalArgumentException("not found : " + request.getSubjectId()));
-        post.updatePost(request, subject);
-
-        return post;
     }
 
     private static void authorizeAuthor(Post post, long userid) {
