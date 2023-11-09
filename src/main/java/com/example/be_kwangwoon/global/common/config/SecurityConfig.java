@@ -16,17 +16,32 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
 public class SecurityConfig {
     private final JwtProvider jwtProvider;
+    AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher("/users/login", "POST");
+    private static final String[] AUTHENTICATION_WHITELIST = {
+            "/users/signup",
+            "/users/login",
+            "/users/refresh",
+            "/swagger-ui/**",
+            "/api-docs/**",
+            "/api-docs",
+            "/swagger-ui.html",
+            "/swagger-ui/**"
+    };
+
 
     @RequiredArgsConstructor
     public static class CustomSecurityFilterManager extends AbstractHttpConfigurer<CustomSecurityFilterManager, HttpSecurity> {
@@ -47,7 +62,6 @@ public class SecurityConfig {
         http.headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         http.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.cors(AbstractHttpConfigurer::disable);
-
         http.httpBasic(AbstractHttpConfigurer::disable);
         http.formLogin(AbstractHttpConfigurer::disable);
         http.csrf(AbstractHttpConfigurer::disable);
@@ -55,9 +69,16 @@ public class SecurityConfig {
         http.apply(new CustomSecurityFilterManager(jwtProvider));
         http.exceptionHandling(configurer -> configurer.authenticationEntryPoint((request, response, accessDeniedException) -> SecurityResponse.unAuthentication(response)));
         http.exceptionHandling(configurer -> configurer.accessDeniedHandler((request, response, accessDeniedException) -> SecurityResponse.forbidden(response)));
-//        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(AUTHENTICATION_WHITELIST).permitAll());
-//        http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/users/profile", "POST")).authenticated());
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/users/profile", "PUT")).authenticated());
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts", "POST")).authenticated());
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts/**", "DELETE")).authenticated());
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts/**", "PUT")).authenticated());
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts/**/**", "DELETE")).authenticated());
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts/**/**", "POST")).authenticated());
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts/**/**", "PUT")).authenticated());
         http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
+
         return http.build();
     }
 
