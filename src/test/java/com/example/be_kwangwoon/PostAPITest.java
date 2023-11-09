@@ -367,7 +367,6 @@ public class PostAPITest {
     @Test
     public void findAllComment() throws Exception {
         final String url = "/posts/{postId}/comment";
-        final String url2 = "/posts/{postId}/comment";
 
         Post post = createDefaultPost(LocalDateTime.MIN);
 
@@ -382,11 +381,13 @@ public class PostAPITest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .principal(principal)
                 .content(requestBody));
+        // 부모 댓글 추가
 
         List<Comment> list = commentRepository.findAll();
 
         resultActions.andExpect(status().isCreated());
         assertThat(list.get(0).getContent()).isEqualTo("content");
+        // 부모 댓글 올바르게 추가 되었는지 확인
 
         userRequest = new AddCommentRequest("content2", list.get(0).getId(), Used.Y);
 
@@ -396,16 +397,18 @@ public class PostAPITest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .principal(principal)
                 .content(requestBody));
+        // 답글 추가
 
         resultActions.andExpect(status().isCreated());
 
-        resultActions = mockMvc.perform(get(url2, post.getId())
+        resultActions = mockMvc.perform(get(url, post.getId())
                 .accept(MediaType.APPLICATION_JSON));
 
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].content").value("content"))
                 .andExpect(jsonPath("$[1].content").value("content2"));
+        // 부모 댓글과 답글 올바르게 추가되었는지 확인
 
         MvcResult mvcResult = resultActions.andReturn();
         String jsonResponse = mvcResult.getResponse().getContentAsString();
@@ -413,14 +416,20 @@ public class PostAPITest {
         ObjectMapper objectMapper = new ObjectMapper();
         List<CommentResponse> comments = objectMapper.readValue(jsonResponse, new TypeReference<List<CommentResponse>>() {
         });
+        // resultActions으로 반환된 값을 List<CommentResponse> 형태로 변환
+
+        Comment comment = commentRepository.findById(comments.get(0).getId()).orElseThrow(() -> new IllegalArgumentException("not found : " + comments.get(0).getId()));
+        assertThat(comment.getContent()).isEqualTo("content");
+        // 부모 댓글의 id가 올바르게 반환되었느지 확인
 
         CommentResponse firstComment = null;
         if (!comments.isEmpty()) {
             firstComment = comments.get(0);
         }
         List<Long> childs = firstComment.getChildsIds();
-        Comment comment = commentRepository.findById(childs.get(0)).orElseThrow(() -> new IllegalArgumentException("not found : " + childs.get(0)));
+        comment = commentRepository.findById(childs.get(0)).orElseThrow(() -> new IllegalArgumentException("not found : " + childs.get(0)));
         assertThat(comment.getContent()).isEqualTo("content2");
+        // 부모 댓글의 답글 목록이 올바르게 반환되었느지 확인
         commentRepository.deleteAll();
     }
 
