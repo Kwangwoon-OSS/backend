@@ -26,6 +26,7 @@ public class PostController {
 
     private final PostService postService;
 
+    @CrossOrigin
     @PostMapping("/posts")
     public ResponseEntity<Void> addPost(@RequestBody AddPostRequest request, @AuthenticationPrincipal User user) {
         postService.addPost(request, user.getId());
@@ -33,6 +34,7 @@ public class PostController {
                 .build();
     }
 
+    @CrossOrigin
     @PutMapping("/posts/{id}")
     public ResponseEntity<Void> updatePost(@PathVariable long id,
                                            @RequestBody UpdatePostRequest request) {
@@ -41,7 +43,7 @@ public class PostController {
         return ResponseEntity.ok()
                 .build();
     }
-
+    @CrossOrigin
     @GetMapping("/posts/{id}")
     public ResponseEntity<PostResponse> findPost(@PathVariable long id) {
         Post post = postService.findPost(id);
@@ -49,6 +51,7 @@ public class PostController {
                 .body(new PostResponse(post));
     }
 
+    @CrossOrigin
     @GetMapping("/posts")
     public ResponseEntity<List<PostResponse>> findAllPost() {
         List<PostResponse> posts = postService.findAllPost()
@@ -59,6 +62,7 @@ public class PostController {
                 .body(posts);
     }
 
+    @CrossOrigin
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable long id, @AuthenticationPrincipal User user) {
         postService.deletePost(id, user);
@@ -66,6 +70,7 @@ public class PostController {
                 .build();
     }
 
+    @CrossOrigin
     @GetMapping("/posts/newposts")
     public ResponseEntity<List<PostResponse>> findNewPost() {
         List<PostResponse> post = postService.findNewPost()

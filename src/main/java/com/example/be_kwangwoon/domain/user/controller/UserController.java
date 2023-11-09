@@ -33,6 +33,7 @@ public class UserController {
 
     private final JwtProvider jwtProvider;
     private final UserService userService;
+    @CrossOrigin
     @Operation(summary = "회원가입")
     @ApiResponse(responseCode = "204", description = "회원가입 성공")
     @PostMapping("/signup")
@@ -40,14 +41,14 @@ public class UserController {
         userService.signUp(userSignUpRequest);
         return ResponseEntity.noContent().build();
     }
-
+    @CrossOrigin
     @Operation(summary = "프로필 조회")
     @ApiResponse(responseCode = "200", description = "프로필 조회 성공", content = @Content(schema = @Schema(implementation = UserProfileResponse.class)))
     @GetMapping("/profile/{userId}")
     public ResponseEntity<UserProfileResponse> profile(@PathVariable Long userId) {
         return ResponseEntity.ok(UserProfileResponse.from(userService.findById(userId)));
     }
-
+    @CrossOrigin
     @Operation(summary = "프로필 작성")
     @ApiResponse(responseCode = "204", description = "프로필 작성 성공")
     @PostMapping("/profile")
@@ -55,7 +56,7 @@ public class UserController {
         userService.createProfile(user.getId(), userProfileCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-
+    @CrossOrigin
     @Operation(summary = "프로필 수정")
     @ApiResponse(responseCode = "204", description = "프로필 수정 성공")
     @PutMapping("/profile")
@@ -63,7 +64,7 @@ public class UserController {
         userService.updateProfile(user.getId(), userProfileUpdateRequest);
         return ResponseEntity.noContent().build();
     }
-
+    @CrossOrigin
     @Operation(summary = "엑세스 토큰/리프레시 토큰 재발급")
     @ApiResponse(responseCode = "200", description = "엑세스 토큰/리프레시 토큰 재발급 성공", content = @Content(schema = @Schema(implementation = TokenRefreshResponse.class)))
     @PostMapping("/refresh")
@@ -78,6 +79,7 @@ public class UserController {
         throw new CustomException(REFRESH_TOKEN_VALIDATION_FAILED);
     }
 
+    @CrossOrigin
     @Operation(summary = "테스트용 엑세스토큰 반환 userId = 1")
     @GetMapping("/test/token/1")
     public ResponseEntity<String> testAccessToken1() {
