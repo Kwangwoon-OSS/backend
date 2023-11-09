@@ -38,6 +38,13 @@ public class CommentService {
         comment.updateComment(request);
     }
 
+    @Transactional
+    public void deleteComment(User user, Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("not found : " + commentId));
+        authorizeAuthor(comment, user.getId());
+        commentRepository.deleteById(commentId);
+    }
+
     public List<CommentResponse> findAllComment(Long postId) {
         List<Comment> list = commentRepository.findByPost_id(postId);
         return list.stream()
