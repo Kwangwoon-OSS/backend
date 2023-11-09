@@ -22,8 +22,7 @@ public class Semester {
     private String semester;
 
     @Builder
-    public Semester(Long id, String years, String semester) {
-        this.id = id;
+    public Semester(String years, String semester) {
         this.years = years;
         this.semester = semester;
     }

@@ -15,6 +15,10 @@ import com.example.be_kwangwoon.domain.post.domain.Status;
 import com.example.be_kwangwoon.domain.post.dto.AddPostRequest;
 import com.example.be_kwangwoon.domain.post.dto.UpdatePostRequest;
 import com.example.be_kwangwoon.domain.post.repository.PostRepository;
+import com.example.be_kwangwoon.domain.professor.domain.Professor;
+import com.example.be_kwangwoon.domain.professor.repository.ProfessorRepository;
+import com.example.be_kwangwoon.domain.semester.domain.Semester;
+import com.example.be_kwangwoon.domain.semester.repository.SemesterRepository;
 import com.example.be_kwangwoon.domain.subject.domain.Subject;
 import com.example.be_kwangwoon.domain.subject.repository.SubjectRepository;
 import com.example.be_kwangwoon.domain.user.domain.Certification;
@@ -79,6 +83,12 @@ public class PostAPITest {
 
     @Autowired
     CommentRepository commentRepository;
+
+    @Autowired
+    ProfessorRepository professorRepository;
+
+    @Autowired
+    SemesterRepository semesterRepository;
 
     User user;
     Subject sb1;
@@ -437,6 +447,55 @@ public class PostAPITest {
         assertThat(comments).isEmpty();
     }
 
+    @DisplayName("findAllSubject/department/semester: subject/department/semester 목록을 불러오는데 성공")
+    @Test
+    public void findAllSubject_Department_Semester() throws Exception {
+        String url = "/subject";
+
+        subjectRepository.deleteAll();
+
+        Department department = departmentRepository.save(new Department("software"));
+        Professor professor = professorRepository.save(new Professor("harry", department));
+        Semester semester = semesterRepository.save(new Semester("2023", "2"));
+
+        sb1 = new Subject("math", "0000", department, semester, professor);
+        sb2 = new Subject("English", "0001", department, semester, professor);
+
+        subjectRepository.save(sb1);
+        subjectRepository.save(sb2);
+
+        ResultActions resultActions = mockMvc.perform(get(url)
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value(sb1.getName()))
+                .andExpect(jsonPath("$[0].code").value(sb1.getCode()))
+                .andExpect(jsonPath("$[1].name").value(sb2.getName()))
+                .andExpect(jsonPath("$[1].code").value(sb2.getCode()));
+
+        url = "/department";
+
+        resultActions = mockMvc.perform(get(url)
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[1].id").value(department.getId()))
+                .andExpect(jsonPath("$[1].name").value(department.getName()));
+
+        url = "/semester";
+
+        resultActions = mockMvc.perform(get(url)
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[1].years").value(semester.getYears()))
+                .andExpect(jsonPath("$[1].semester").value(semester.getSemester()));
+
+    }
+
     Comment createDefaultComment(Comment comment, Post post) {
         return commentRepository.save(Comment.builder()
                 .content("content")
@@ -489,6 +548,7 @@ public class PostAPITest {
 
     void createDefaultSubject() {
         subjectRepository.deleteAll();
+
         sb1 = new Subject("math", "0000");
         sb2 = new Subject("English", "0001");
 

@@ -36,8 +36,7 @@ public class Subject {
     @JoinColumn(name = "semester_id")
     private Semester semester;
     @Builder
-    public Subject(Long id, String name, String code, Department department, Semester semester, Professor professor) {
-        this.id = id;
+    public Subject(String name, String code, Department department, Semester semester, Professor professor) {
         this.name = name;
         this.code = code;
         this.department = department;

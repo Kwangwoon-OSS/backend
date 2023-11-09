@@ -26,8 +26,7 @@ public class Professor {
     private Department department;
 
     @Builder
-    public Professor(Long id, String name, Department department) {
-        this.id = id;
+    public Professor(String name, Department department) {
         this.name = name;
         this.department = department;
     }

@@ -13,11 +13,13 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class CommentResponse {
+    private Long id;
     private String content;
     private Used used;
     private List<Long> childsIds;
 
     public CommentResponse(Comment comment) {
+        this.id = comment.getId();
         this.content = comment.getContent();
         this.used = comment.getUsed();
         this.childsIds = new ArrayList<>();

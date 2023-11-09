@@ -21,6 +21,7 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
 
+    @CrossOrigin
     @PostMapping("/posts/{postId}/comment")
     public ResponseEntity<Void> addComment(@AuthenticationPrincipal User user, @RequestBody AddCommentRequest request, @PathVariable long postId) {
         commentService.addComment(user, request, postId);
@@ -28,6 +29,7 @@ public class CommentController {
                 .build();
     }
 
+    @CrossOrigin
     @PutMapping("/posts/{postId}/{commentId}")
     public ResponseEntity<Void> updateComment(@AuthenticationPrincipal User user, @RequestBody UpdateCommentRequest updateCommentRequest, @PathVariable Long postId, @PathVariable Long commentId) {
         commentService.updateComment(user, updateCommentRequest, postId, commentId);
@@ -35,12 +37,14 @@ public class CommentController {
                 .build();
     }
 
+    @CrossOrigin
     @GetMapping("/posts/{postId}/comment")
     public ResponseEntity<List<CommentResponse>> findAllComment(@PathVariable Long postId) {
         return ResponseEntity.ok()
                 .body(commentService.findAllComment(postId));
     }
 
+    @CrossOrigin
     @DeleteMapping("/posts/{postId}/{commentId}")
     public ResponseEntity<Void> deleteComment(@AuthenticationPrincipal User user, @PathVariable Long postId, @PathVariable Long commentId) {
         commentService.deleteComment(user, commentId);
