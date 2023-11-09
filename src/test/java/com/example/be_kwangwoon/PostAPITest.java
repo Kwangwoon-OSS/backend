@@ -387,6 +387,8 @@ public class PostAPITest {
                 .principal(principal)
                 .content(requestBody));
 
+        resultActions.andExpect(status().isCreated());
+
         resultActions = mockMvc.perform(get(url2, post.getId())
                 .accept(MediaType.APPLICATION_JSON));
 
@@ -410,6 +412,29 @@ public class PostAPITest {
         Comment comment = commentRepository.findById(childs.get(0)).orElseThrow(() -> new IllegalArgumentException("not found : " + childs.get(0)));
         assertThat(comment.getContent()).isEqualTo("content2");
         commentRepository.deleteAll();
+    }
+
+    @DisplayName("deleteComment: 댓글 삭제에 성공했다")
+    @Test
+    public void deleteComment() throws Exception {
+        final String url = "/posts/{postId}/{commentId}";
+
+        Post post = createDefaultPost(LocalDateTime.MIN);
+        Comment comment = createDefaultComment(null, post);
+
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("username");
+
+        List<Comment> comments = commentRepository.findAll();
+        assertThat(comments.get(0).getContent()).isEqualTo(comment.getContent());
+
+        ResultActions resultActions = mockMvc.perform(delete(url, post.getId(), comment.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .principal(principal));
+
+        comments = commentRepository.findAll();
+
+        assertThat(comments).isEmpty();
     }
 
     Comment createDefaultComment(Comment comment, Post post) {
