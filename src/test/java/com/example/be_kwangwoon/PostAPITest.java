@@ -20,6 +20,7 @@ import com.example.be_kwangwoon.domain.professor.repository.ProfessorRepository;
 import com.example.be_kwangwoon.domain.semester.domain.Semester;
 import com.example.be_kwangwoon.domain.semester.repository.SemesterRepository;
 import com.example.be_kwangwoon.domain.subject.domain.Subject;
+import com.example.be_kwangwoon.domain.subject.dto.FindSubjectBySemesterRequest;
 import com.example.be_kwangwoon.domain.subject.repository.SubjectRepository;
 import com.example.be_kwangwoon.domain.user.domain.Certification;
 import com.example.be_kwangwoon.domain.user.domain.User;
@@ -456,6 +457,7 @@ public class PostAPITest {
         assertThat(comments).isEmpty();
     }
 
+    /*
     @DisplayName("findAllSubject/department/semester: subject/department/semester 목록을 불러오는데 성공")
     @Test
     public void findAllSubject_Department_Semester() throws Exception {
@@ -480,8 +482,16 @@ public class PostAPITest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value(sb1.getName()))
                 .andExpect(jsonPath("$[0].code").value(sb1.getCode()))
+                .andExpect(jsonPath("$[0].departments_name").value(department.getName()))
+                .andExpect(jsonPath("$[0].professors_name").value(professor.getName()))
+                .andExpect(jsonPath("$[0].semesters_years").value(semester.getYears()))
+                .andExpect(jsonPath("$[0].semesters_semester").value(semester.getSemester()))
                 .andExpect(jsonPath("$[1].name").value(sb2.getName()))
-                .andExpect(jsonPath("$[1].code").value(sb2.getCode()));
+                .andExpect(jsonPath("$[1].code").value(sb2.getCode()))
+                .andExpect(jsonPath("$[1].departments_name").value(department.getName()))
+                .andExpect(jsonPath("$[1].professors_name").value(professor.getName()))
+                .andExpect(jsonPath("$[1].semesters_years").value(semester.getYears()))
+                .andExpect(jsonPath("$[1].semesters_semester").value(semester.getSemester()));
 
         url = "/department";
 
@@ -502,6 +512,74 @@ public class PostAPITest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[1].years").value(semester.getYears()))
                 .andExpect(jsonPath("$[1].semester").value(semester.getSemester()));
+
+        url = "/subjectbysemester";
+
+        FindSubjectBySemesterRequest findSubjectBySemesterRequest = new FindSubjectBySemesterRequest(semester.getYears(), semester.getSemester());
+
+        String requestBody = objectMapper.writeValueAsString(findSubjectBySemesterRequest);
+
+        resultActions = mockMvc.perform(get(url)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(requestBody));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value(sb1.getName()))
+                .andExpect(jsonPath("$[0].code").value(sb1.getCode()))
+                .andExpect(jsonPath("$[0].departments_name").value(department.getName()))
+                .andExpect(jsonPath("$[0].professors_name").value(professor.getName()))
+                .andExpect(jsonPath("$[0].semesters_years").value(semester.getYears()))
+                .andExpect(jsonPath("$[0].semesters_semester").value(semester.getSemester()))
+                .andExpect(jsonPath("$[1].name").value(sb2.getName()))
+                .andExpect(jsonPath("$[1].code").value(sb2.getCode()))
+                .andExpect(jsonPath("$[1].departments_name").value(department.getName()))
+                .andExpect(jsonPath("$[1].professors_name").value(professor.getName()))
+                .andExpect(jsonPath("$[1].semesters_years").value(semester.getYears()))
+                .andExpect(jsonPath("$[1].semesters_semester").value(semester.getSemester()));
+    }
+     */
+
+
+    @DisplayName("findSubjectBySemester: subject/department/semester 목록을 불러오는데 성공")
+    @Test
+    public void findSubjectBySemester() throws Exception {
+        final String url = "/subjectbysemester";
+
+        subjectRepository.deleteAll();
+
+        Department department = departmentRepository.save(new Department("software"));
+        Professor professor = professorRepository.save(new Professor("harry", department));
+        Semester semester = semesterRepository.save(new Semester("2023", "2"));
+
+        sb1 = new Subject("math", "0000", department, semester, professor);
+        sb2 = new Subject("English", "0001", department, semester, professor);
+
+        subjectRepository.save(sb1);
+        subjectRepository.save(sb2);
+
+        FindSubjectBySemesterRequest findSubjectBySemesterRequest = new FindSubjectBySemesterRequest(semester.getYears(), semester.getSemester());
+
+        String requestBody = objectMapper.writeValueAsString(findSubjectBySemesterRequest);
+
+        ResultActions resultActions = mockMvc.perform(get(url)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(requestBody));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value(sb1.getName()))
+                .andExpect(jsonPath("$[0].code").value(sb1.getCode()))
+                .andExpect(jsonPath("$[0].departments_name").value(department.getName()))
+                .andExpect(jsonPath("$[0].professors_name").value(professor.getName()))
+                .andExpect(jsonPath("$[0].semesters_years").value(semester.getYears()))
+                .andExpect(jsonPath("$[0].semesters_semester").value(semester.getSemester()))
+                .andExpect(jsonPath("$[1].name").value(sb2.getName()))
+                .andExpect(jsonPath("$[1].code").value(sb2.getCode()))
+                .andExpect(jsonPath("$[1].departments_name").value(department.getName()))
+                .andExpect(jsonPath("$[1].professors_name").value(professor.getName()))
+                .andExpect(jsonPath("$[1].semesters_years").value(semester.getYears()))
+                .andExpect(jsonPath("$[1].semesters_semester").value(semester.getSemester()));
 
     }
 
