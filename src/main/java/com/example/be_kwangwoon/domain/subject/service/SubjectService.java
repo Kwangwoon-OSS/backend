@@ -8,6 +8,7 @@ import com.example.be_kwangwoon.domain.subject.dto.SubjectResponse;
 import com.example.be_kwangwoon.domain.subject.repository.SubjectRepository;
 import com.example.be_kwangwoon.global.common.exception.CustomException;
 import com.example.be_kwangwoon.global.common.exception.ExceptionCode;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class SubjectService {
                 .toList();
     }
 
+    @Transactional
     public List<SubjectResponse> findAllSubjectBySemester(FindSubjectBySemesterRequest request) {
         List<Subject> slist = subjectRepository.findBySemester_id(
                 semesterRepository

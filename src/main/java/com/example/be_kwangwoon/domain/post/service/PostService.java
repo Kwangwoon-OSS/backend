@@ -42,6 +42,13 @@ public class PostService {
         post.updatePost(request, subject);
     }
 
+    @Transactional
+    public void deletePost(long id, User user) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found : " + id));
+        authorizeAuthor(post, user.getId());
+        postRepository.deleteById(id);
+    }
+
     public Post findPost(long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found : " + id));
         return post;
@@ -51,11 +58,6 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public void deletePost(long id, User user) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found : " + id));
-        authorizeAuthor(post, user.getId());
-        postRepository.deleteById(id);
-    }
 
     public List<Post> findNewPost() {
         List<Post> list = postRepository.findAll(PageRequest.of(0, 2, Sort.by("createAt").descending())).
