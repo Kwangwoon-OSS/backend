@@ -7,9 +7,7 @@ import com.example.be_kwangwoon.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +26,21 @@ public class BookmarkController {
                 .toList();
         return ResponseEntity.ok()
                 .body(list);
+    }
+
+    @CrossOrigin
+    @PostMapping("/posts/{postId}/interest")
+    public ResponseEntity<Void> addInterestPost(@AuthenticationPrincipal User user, @PathVariable Long postId){
+        bookmarkService.addInterestPost(user, postId);
+        return ResponseEntity.ok()
+                .build();
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/posts/{postId}/interest")
+    public ResponseEntity<Void> deleteInterestPost(@AuthenticationPrincipal User user, @PathVariable Long postId){
+        bookmarkService.deleteInterestPost(user, postId);
+        return ResponseEntity.ok()
+                .build();
     }
 }

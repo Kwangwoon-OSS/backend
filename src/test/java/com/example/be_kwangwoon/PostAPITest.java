@@ -583,6 +583,39 @@ public class PostAPITest {
 
     }
 
+    @DisplayName("add/deletebookmarkbypostId: bookmark를  불러오고 삭제하는데 성공")
+    @Test
+    public void add_deleteBookmark() throws Exception {
+        final String url = "/posts/{postId}/interest";
+
+        Post post = createDefaultPost(LocalDateTime.MIN);
+        Bookmark bookmark = bookmarkRepository.save(new Bookmark(user, post));
+
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("username");
+
+        ResultActions resultActions = mockMvc.perform(post(url, post.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .principal(principal));
+
+        resultActions
+                .andExpect(status().isOk());
+
+        List<Bookmark> list = bookmarkRepository.findAll();
+        assertThat(list.get(0).getId()).isEqualTo(bookmark.getId());
+
+        resultActions = mockMvc.perform(delete(url, post.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .principal(principal));
+
+        resultActions
+                .andExpect(status().isOk());
+
+        list = bookmarkRepository.findAll();
+        assertThat(list.size()).isEqualTo(0);
+    }
+
+
     Comment createDefaultComment(Comment comment, Post post) {
         return commentRepository.save(Comment.builder()
                 .content("content")

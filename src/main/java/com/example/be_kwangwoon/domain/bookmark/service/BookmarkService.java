@@ -28,4 +28,15 @@ public class BookmarkService {
         return plist;
     }
 
+    @Transactional
+    public void addInterestPost(User user, Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("not found : " + postId));
+        bookmarkRepository.save(new Bookmark(user, post));
+    }
+
+    @Transactional
+    public void deleteInterestPost(User user, Long postId) {
+        Post psot = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("not found : " + postId));
+        bookmarkRepository.deleteByPost_id(postId);
+    }
 }
