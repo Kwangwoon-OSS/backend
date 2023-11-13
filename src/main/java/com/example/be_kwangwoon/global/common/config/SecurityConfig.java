@@ -30,18 +30,6 @@ import java.util.List;
 @Slf4j
 public class SecurityConfig {
     private final JwtProvider jwtProvider;
-    AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher("/users/login", "POST");
-    private static final String[] AUTHENTICATION_WHITELIST = {
-            "/users/signup",
-            "/users/login",
-            "/users/refresh",
-            "/swagger-ui/**",
-            "/api-docs/**",
-            "/api-docs",
-            "/swagger-ui.html",
-            "/swagger-ui/**"
-    };
-
 
     @RequiredArgsConstructor
     public static class CustomSecurityFilterManager extends AbstractHttpConfigurer<CustomSecurityFilterManager, HttpSecurity> {
@@ -51,7 +39,6 @@ public class SecurityConfig {
         public void configure(HttpSecurity http) {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtProvider);
-            jwtAuthenticationFilter.setFilterProcessesUrl("/users/login");
             http.addFilter(jwtAuthenticationFilter);
             http.addFilter(new JwtAuthorizationFilter(authenticationManager, jwtProvider));
         }
@@ -77,8 +64,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts/**/**", "DELETE")).authenticated());
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts/**/**", "POST")).authenticated());
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts/**/**", "PUT")).authenticated());
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/login", "POST")).permitAll());
         http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
-
         return http.build();
     }
 
