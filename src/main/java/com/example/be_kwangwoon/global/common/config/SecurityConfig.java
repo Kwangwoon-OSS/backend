@@ -64,6 +64,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts/**/**", "DELETE")).authenticated());
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts/**/**", "POST")).authenticated());
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts/**/**", "PUT")).authenticated());
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/users/email/verify", "POST")).authenticated());
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/users/email/cert", "POST")).authenticated());
         http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
         return http.build();
     }
