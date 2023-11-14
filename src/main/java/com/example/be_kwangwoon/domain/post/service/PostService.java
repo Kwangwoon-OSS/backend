@@ -60,7 +60,7 @@ public class PostService {
 
 
     public List<Post> findNewPost() {
-        List<Post> list = postRepository.findAll(PageRequest.of(0, 2, Sort.by("createAt").descending())).
+        List<Post> list = postRepository.findAll(PageRequest.of(0, 6, Sort.by("createAt").descending())).
                 stream().
                 toList();
         return list;
