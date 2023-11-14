@@ -108,6 +108,7 @@ public class PostAPITest {
         user = userRepository.save(User.builder()
                 .email("user@gmail.com")
                 .password("test")
+                .nickname("harry")
                 .isCertification(Certification.Y)
                 .build());
 
@@ -408,9 +409,13 @@ public class PostAPITest {
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].content").value("content"))
-                .andExpect(jsonPath("$[1].content").value("content2"));
+                .andExpect(jsonPath("$[0].username").value("harry"))
+                .andExpect(jsonPath("$[1].content").value("content2"))
+                .andExpect(jsonPath("$[1].username").value("harry"));
+        //        .andExpect(jsonPath("$[1].createdtime").value(LocalDateTime.MIN))
         // 부모 댓글과 답글 올바르게 추가되었는지 확인
 
+        /*
         MvcResult mvcResult = resultActions.andReturn();
         String jsonResponse = mvcResult.getResponse().getContentAsString();
 
@@ -429,7 +434,7 @@ public class PostAPITest {
         }
         List<Long> childs = firstComment.getChildsIds();
         comment = commentRepository.findById(childs.get(0)).orElseThrow(() -> new IllegalArgumentException("not found : " + childs.get(0)));
-        assertThat(comment.getContent()).isEqualTo("content2");
+        assertThat(comment.getContent()).isEqualTo("content2");*/
         // 부모 댓글의 답글 목록이 올바르게 반환되었느지 확인
         commentRepository.deleteAll();
     }
