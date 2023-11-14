@@ -18,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static com.example.be_kwangwoon.global.common.exception.ExceptionCode.USER_NOT_FOUND;
 
 @Service
@@ -31,6 +33,10 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void signUp(UserSignUpRequest userSignUpRequest) {
+        Optional<User> email = userRepository.findByEmail(userSignUpRequest.getEmail());
+        if (email.isPresent()) {
+            throw new CustomException(ExceptionCode.USER_ALREADY_EXISTS);
+        }
         User user = User.from(userSignUpRequest, bCryptPasswordEncoder);
         userRepository.save(user);
     }
