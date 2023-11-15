@@ -4,6 +4,7 @@ package com.example.be_kwangwoon.domain.user.controller;
 import com.example.be_kwangwoon.domain.user.controller.response.EmailVerifyResponse;
 import com.example.be_kwangwoon.domain.user.controller.response.TokenRefreshResponse;
 import com.example.be_kwangwoon.domain.user.controller.response.UserProfileResponse;
+import com.example.be_kwangwoon.domain.user.domain.QUser;
 import com.example.be_kwangwoon.domain.user.domain.User;
 import com.example.be_kwangwoon.domain.user.domain.request.*;
 import com.example.be_kwangwoon.domain.user.service.UserService;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.Map;
 
+import static com.example.be_kwangwoon.domain.user.domain.QUser.user;
 import static com.example.be_kwangwoon.global.common.exception.ExceptionCode.REFRESH_TOKEN_VALIDATION_FAILED;
 
 @Tag(name = "User", description = "유저 API")
@@ -36,6 +39,17 @@ public class UserController {
 
     private final JwtProvider jwtProvider;
     private final UserService userService;
+    @CrossOrigin
+    @Operation(summary = "로그인")
+    @ApiResponse(responseCode = "200", description = "로그인")
+    @PostMapping("/login")
+    public ResponseEntity<Void> signUp(@RequestBody UserLoginRequest userLoginRequest) {
+        User user = userService.login(userLoginRequest);
+        HttpHeaders headers = new HttpHeaders();
+        String accessToken = jwtProvider.createAccessToken(user);
+        headers.add(HttpHeaders.AUTHORIZATION, accessToken);
+        return ResponseEntity.ok().headers(headers).build();
+    }
 
     @CrossOrigin
     @Operation(summary = "회원가입")
@@ -43,6 +57,9 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<Void> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
         userService.signUp(userSignUpRequest);
+
+
+
         return ResponseEntity.noContent().build();
     }
 

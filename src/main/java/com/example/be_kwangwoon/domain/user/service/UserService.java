@@ -2,6 +2,7 @@ package com.example.be_kwangwoon.domain.user.service;
 
 import com.example.be_kwangwoon.domain.department.domain.Department;
 import com.example.be_kwangwoon.domain.department.repository.DepartmentRepository;
+import com.example.be_kwangwoon.domain.user.controller.UserLoginRequest;
 import com.example.be_kwangwoon.domain.user.domain.request.UserProfileCreateRequest;
 import com.example.be_kwangwoon.domain.user.domain.request.UserProfileUpdateRequest;
 import com.example.be_kwangwoon.domain.user.domain.User;
@@ -63,5 +64,13 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+    }
+
+    public User login(UserLoginRequest userLoginRequest) {
+        User user = userRepository.findByEmail(userLoginRequest.getEmail()).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        if (!bCryptPasswordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
+            throw new CustomException(ExceptionCode.PASSWORD_NOT_MATCH);
+        }
+        return user;
     }
 }
