@@ -9,6 +9,7 @@ import com.example.be_kwangwoon.domain.user.domain.User;
 import com.example.be_kwangwoon.domain.user.domain.request.*;
 import com.example.be_kwangwoon.domain.user.service.UserService;
 import com.example.be_kwangwoon.global.common.exception.CustomException;
+import com.example.be_kwangwoon.global.common.exception.ExceptionCode;
 import com.example.be_kwangwoon.global.common.jwt.JwtProvider;
 import com.univcert.api.UnivCert;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,6 +40,7 @@ public class UserController {
 
     private final JwtProvider jwtProvider;
     private final UserService userService;
+
     @CrossOrigin
     @Operation(summary = "로그인")
     @ApiResponse(responseCode = "200", description = "로그인")
@@ -57,9 +59,6 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<Void> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
         userService.signUp(userSignUpRequest);
-
-
-
         return ResponseEntity.noContent().build();
     }
 
@@ -69,6 +68,17 @@ public class UserController {
     @GetMapping("/profile/{userId}")
     public ResponseEntity<UserProfileResponse> profile(@PathVariable Long userId) {
         return ResponseEntity.ok(UserProfileResponse.from(userService.findById(userId)));
+    }
+
+    @CrossOrigin
+    @Operation(summary = "내 프로필 조회")
+    @ApiResponse(responseCode = "200", description = "내 프로필 조회 성공", content = @Content(schema = @Schema(implementation = UserProfileResponse.class)))
+    @GetMapping("/profile")
+    public ResponseEntity<UserProfileResponse> profile(@AuthenticationPrincipal User user) {
+        if(userService.existsProfile(user.getId())){
+            return ResponseEntity.ok(UserProfileResponse.from(userService.findById(user.getId())));
+        }
+        throw new CustomException(ExceptionCode.PROFILE_NOT_FOUND);
     }
 
     @CrossOrigin
@@ -119,7 +129,7 @@ public class UserController {
     public ResponseEntity<EmailVerifyResponse> emailRequest(@RequestBody EmailCheckRequest emailCheckRequest) throws IOException {
         Map<String, Object> certify = UnivCert.certify("93944d88-416c-4843-a93a-c824b37f2f01", emailCheckRequest.getEmail(), emailCheckRequest.getUnivName(), true);
         Boolean success = (Boolean) certify.get("success");
-        if(success){
+        if (success) {
             return ResponseEntity.ok(EmailVerifyResponse.from(true));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(EmailVerifyResponse.from(false));
@@ -133,7 +143,7 @@ public class UserController {
     public ResponseEntity<EmailVerifyResponse> emailVerify(@RequestBody EmailVerifyRequest emailVerifyRequest) throws IOException {
         Map<String, Object> certifyCode = UnivCert.certifyCode("93944d88-416c-4843-a93a-c824b37f2f01", emailVerifyRequest.getEmail(), emailVerifyRequest.getUnivName(), emailVerifyRequest.getCode());
         Boolean success = (Boolean) certifyCode.get("success");
-        if(success){
+        if (success) {
             return ResponseEntity.ok(EmailVerifyResponse.from(true));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(EmailVerifyResponse.from(false));

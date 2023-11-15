@@ -58,6 +58,7 @@ public class SecurityConfig {
         http.exceptionHandling(configurer -> configurer.accessDeniedHandler((request, response, accessDeniedException) -> SecurityResponse.forbidden(response)));
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/users/profile", "POST")).authenticated());
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/users/profile", "PUT")).authenticated());
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/users/profile", "GET")).authenticated());
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts", "POST")).authenticated());
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts/**", "DELETE")).authenticated());
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/posts/**", "PUT")).authenticated());

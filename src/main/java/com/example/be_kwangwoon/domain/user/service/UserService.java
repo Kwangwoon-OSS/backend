@@ -73,4 +73,9 @@ public class UserService implements UserDetailsService {
         }
         return user;
     }
+
+    public boolean existsProfile(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        return user.getDepartment() != null;
+    }
 }

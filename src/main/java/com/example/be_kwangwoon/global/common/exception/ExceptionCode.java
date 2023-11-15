@@ -22,7 +22,10 @@ public enum ExceptionCode {
     PASSWORD_NOT_MATCH(2004, HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
 
     //department
-    DEPARTMENT_NOT_FOUND(3001, HttpStatus.NOT_FOUND, "학과를 찾을 수 없습니다.");
+    DEPARTMENT_NOT_FOUND(3001, HttpStatus.NOT_FOUND, "학과를 찾을 수 없습니다."),
+
+    //profile
+    PROFILE_NOT_FOUND(4001, HttpStatus.NOT_FOUND, "프로필을 찾을 수 없습니다.");
 
     private final int code;
     private final HttpStatus status;
