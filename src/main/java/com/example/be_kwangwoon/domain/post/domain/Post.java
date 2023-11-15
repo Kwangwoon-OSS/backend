@@ -67,6 +67,7 @@ public class Post {
         this.title = request.getTitle();
         this.content = request.getContent();
         this.status = request.getStatus();
+        this.type = request.getTyoe();
         this.deadline = request.getDeadline();
         this.contact = request.getContact();
         this.people = request.getPeople();
