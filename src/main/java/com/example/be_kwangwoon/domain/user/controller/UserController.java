@@ -105,7 +105,7 @@ public class UserController {
         if(success){
             return ResponseEntity.ok(EmailVerifyResponse.from(true));
         }
-        return ResponseEntity.ok(EmailVerifyResponse.from(false));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(EmailVerifyResponse.from(false));
     }
 
 
@@ -119,7 +119,7 @@ public class UserController {
         if(success){
             return ResponseEntity.ok(EmailVerifyResponse.from(true));
         }
-        return ResponseEntity.ok(EmailVerifyResponse.from(false));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(EmailVerifyResponse.from(false));
     }
 
 }
