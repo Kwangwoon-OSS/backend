@@ -599,7 +599,7 @@ public class PostAPITest {
     @Test
     public void add_deleteBookmark() throws Exception {
         final String url = "/posts/{postId}/interest";
-
+        System.out.println(1);
         Post post = createDefaultPost(LocalDateTime.MIN);
         Bookmark bookmark = bookmarkRepository.save(new Bookmark(user, post));
 

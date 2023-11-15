@@ -65,7 +65,7 @@ public class PostService {
         List<Post> list = postRepository.findAll(PageRequest.of(0, 6, Sort.by("createAt").descending())).
                 stream().
                 toList();
-        return list;
+         return list;
     }
 
     private static void authorizeAuthor(Post post, long userid) {
