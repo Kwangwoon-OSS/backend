@@ -288,8 +288,12 @@ public class PostAPITest {
                 .post(post)
                 .build());
 
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("username");
+
         final ResultActions resultActions = mockMvc.perform(get(url)
-                .accept(MediaType.APPLICATION_JSON));
+                .accept(MediaType.APPLICATION_JSON)
+                .principal(principal));
 
         resultActions.andExpect(status().isOk());
 
@@ -566,7 +570,7 @@ public class PostAPITest {
         subjectRepository.save(sb1);
         subjectRepository.save(sb2);
 
-        FindSubjectBySemesterRequest findSubjectBySemesterRequest = new FindSubjectBySemesterRequest(semester.getYears(), semester.getSemester());
+        FindSubjectBySemesterRequest findSubjectBySemesterRequest = new FindSubjectBySemesterRequest("2023", "2");
 
         String requestBody = objectMapper.writeValueAsString(findSubjectBySemesterRequest);
 
