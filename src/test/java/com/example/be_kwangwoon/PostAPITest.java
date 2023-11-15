@@ -12,6 +12,7 @@ import com.example.be_kwangwoon.domain.department.domain.Department;
 import com.example.be_kwangwoon.domain.department.repository.DepartmentRepository;
 import com.example.be_kwangwoon.domain.post.domain.Post;
 import com.example.be_kwangwoon.domain.post.domain.Status;
+import com.example.be_kwangwoon.domain.post.domain.Type;
 import com.example.be_kwangwoon.domain.post.dto.AddPostRequest;
 import com.example.be_kwangwoon.domain.post.dto.UpdatePostRequest;
 import com.example.be_kwangwoon.domain.post.repository.PostRepository;
@@ -175,6 +176,7 @@ public class PostAPITest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].content").value(savedPost.getContent()))
                 .andExpect(jsonPath("$[0].title").value(savedPost.getTitle()));
+                //.andExpect(jsonPath("$[0].type").value(savedPost.getType()))
     }
 
     @DisplayName("deletePost: 아티클 삭제에 성공한다.")
@@ -209,6 +211,7 @@ public class PostAPITest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").value(savedArticle.getContent()))
                 .andExpect(jsonPath("$.title").value(savedArticle.getTitle()));
+                //.andExpect(jsonPath("$.type").value(savedArticle.getType()))
     }
 
 //    @DisplayName("updatePost: 아티클 수정에 성공한다.")
@@ -646,6 +649,7 @@ public class PostAPITest {
                 .title("title")
                 .content("content")
                 .status(Status.ACTIVE)
+                .type(Type.PROJECT)
                 .deadline(localDateTime)
                 .views(0)
                 .contact("123")
@@ -661,6 +665,7 @@ public class PostAPITest {
                 .title(title)
                 .content(content)
                 .status(Status.ACTIVE)
+                .type(Type.STUDY)
                 .deadline(localDateTime)
                 .views(0)
                 .contact("123")

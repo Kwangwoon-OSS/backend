@@ -49,8 +49,10 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
+    @Transactional
     public Post findPost(long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found : " + id));
+        post.updatePostviews();
         return post;
     }
 

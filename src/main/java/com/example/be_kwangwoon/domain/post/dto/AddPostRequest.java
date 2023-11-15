@@ -3,6 +3,7 @@ package com.example.be_kwangwoon.domain.post.dto;
 
 import com.example.be_kwangwoon.domain.post.domain.Post;
 import com.example.be_kwangwoon.domain.post.domain.Status;
+import com.example.be_kwangwoon.domain.post.domain.Type;
 import com.example.be_kwangwoon.domain.subject.domain.Subject;
 import com.example.be_kwangwoon.domain.user.domain.User;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ public class AddPostRequest {
     private String title;
     private String content;
     private Status status;
+    private Type type;
     private LocalDateTime deadline;
     private int views;
     private String contact;
@@ -31,6 +33,7 @@ public class AddPostRequest {
                 .title(title)
                 .content(content)
                 .status(status)
+                .type(type)
                 .deadline(deadline)
                 .views(views)
                 .contact(contact)

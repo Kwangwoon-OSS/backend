@@ -2,6 +2,7 @@ package com.example.be_kwangwoon.domain.post.dto;
 
 import com.example.be_kwangwoon.domain.post.domain.Post;
 import com.example.be_kwangwoon.domain.post.domain.Status;
+import com.example.be_kwangwoon.domain.post.domain.Type;
 import com.example.be_kwangwoon.domain.subject.domain.Subject;
 import com.example.be_kwangwoon.domain.user.domain.User;
 import jakarta.persistence.Column;
@@ -24,6 +25,7 @@ public class PostResponse {
     private String title;
     private String content;
     private Status status;
+    private Type type;
     private LocalDateTime deadline;
     private int views;
     private String contact;
@@ -38,6 +40,7 @@ public class PostResponse {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.status = post.getStatus();
+        this.type = post.getType();
         this.deadline = post.getDeadline();
         this.views = post.getViews();
         this.contact = post.getContact();

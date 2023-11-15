@@ -27,6 +27,7 @@ public class Post {
     private String title;
     private String content;
     private Status status;
+    private Type type;
     private LocalDateTime deadline;
     private int views;
     private String contact;
@@ -49,10 +50,11 @@ public class Post {
     private LocalDateTime updateAt;
 
     @Builder
-    public Post(String title, String content, Status status, LocalDateTime deadline, int views, String contact, int people, User user, Subject subject) {
+    public Post(String title, String content, Status status, Type type, LocalDateTime deadline, int views, String contact, int people, User user, Subject subject) {
         this.title = title;
         this.content = content;
         this.status = status;
+        this.type = type;
         this.deadline = deadline;
         this.views = views;
         this.contact = contact;
@@ -69,5 +71,9 @@ public class Post {
         this.contact = request.getContact();
         this.people = request.getPeople();
         this.subject = subject;
+    }
+
+    public void updatePostviews() {
+        this.views += 1;
     }
 }
