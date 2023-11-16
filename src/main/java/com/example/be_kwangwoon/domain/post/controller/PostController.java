@@ -37,8 +37,8 @@ public class PostController {
     @CrossOrigin
     @PutMapping("/posts/{id}")
     public ResponseEntity<Void> updatePost(@PathVariable long id,
-                                           @RequestBody UpdatePostRequest request) {
-        postService.updatePost(id, request);
+                                           @RequestBody UpdatePostRequest request, @AuthenticationPrincipal User user) {
+        postService.updatePost(id, request, user);
 
         return ResponseEntity.ok()
                 .build();

@@ -35,9 +35,9 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(long id, UpdatePostRequest request) {
+    public void updatePost(long id, UpdatePostRequest request , User user) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found : " + id));
-        authorizeAuthor(post, id);
+        authorizeAuthor(post, user.getId());
         Subject subject = subjectRepository.findById(request.getSubjectId()).orElseThrow(() -> new IllegalArgumentException("not found : " + request.getSubjectId()));
         post.updatePost(request, subject);
     }
