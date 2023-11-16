@@ -43,6 +43,7 @@ public class PostController {
         return ResponseEntity.ok()
                 .build();
     }
+
     @CrossOrigin
     @GetMapping("/posts/{id}")
     public ResponseEntity<PostResponse> findPost(@PathVariable long id) {

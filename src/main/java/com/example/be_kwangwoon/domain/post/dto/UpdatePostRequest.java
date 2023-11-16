@@ -17,7 +17,7 @@ public class UpdatePostRequest {
     private String title;
     private String content;
     private Status status;
-    private Type tyoe;
+    private Type type;
     private LocalDateTime deadline;
     private String contact;
     private int people;

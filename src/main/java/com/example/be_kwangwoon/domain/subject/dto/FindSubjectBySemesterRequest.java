@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class FindSubjectBySemesterRequest {
-    private String years;
-    private String semester;
+    private Long years;
+    private Long semester;
 }

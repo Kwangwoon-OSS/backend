@@ -32,7 +32,7 @@ public class SubjectService {
     public List<SubjectResponse> findAllSubjectBySemester(FindSubjectBySemesterRequest request) {
         List<Subject> slist = subjectRepository.findBySemester_id(
                 semesterRepository
-                        .findByYearsAndSemester(request.getYears(), request.getSemester())
+                        .findByYearsAndSemester(request.getYears().toString(), request.getSemester().toString())
                         .getId());
 
         return slist
