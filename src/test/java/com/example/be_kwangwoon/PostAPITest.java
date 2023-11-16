@@ -570,7 +570,7 @@ public class PostAPITest {
         subjectRepository.save(sb1);
         subjectRepository.save(sb2);
 
-        FindSubjectBySemesterRequest findSubjectBySemesterRequest = new FindSubjectBySemesterRequest((long)2023, (long)2);
+        FindSubjectBySemesterRequest findSubjectBySemesterRequest = new FindSubjectBySemesterRequest(2023, 2);
 
         String requestBody = objectMapper.writeValueAsString(findSubjectBySemesterRequest);
 
