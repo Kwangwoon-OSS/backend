@@ -637,7 +637,7 @@ public class PostAPITest {
         Post post = createDefaultPost(LocalDateTime.MIN);
 
         //, "%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5"
-        ResultActions resultActions = mockMvc.perform(get(url)
+        ResultActions resultActions = mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(requestBody));
 

@@ -114,7 +114,7 @@ public class PostController {
     }
     */
     @CrossOrigin
-    @GetMapping("/posts/filter3")
+    @PostMapping("/posts/filter3")
     public ResponseEntity<List<PostResponse>> findAllPostBySubject(@RequestBody FindPostBySubjectRequest findPostBySubjectRequest) {
         List<PostResponse> list = postService.findAllPostBySubject(findPostBySubjectRequest.getName());
         return ResponseEntity.ok()
