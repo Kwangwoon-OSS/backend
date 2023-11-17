@@ -28,16 +28,4 @@ public class SubjectService {
                 .toList();
     }
 
-    @Transactional
-    public List<SubjectResponse> findAllSubjectBySemester(FindSubjectBySemesterRequest request) {
-        List<Subject> slist = subjectRepository.findBySemester_id(
-                semesterRepository
-                        .findByYearsAndSemester(request.getYears() + "", request.getSemester() + "")
-                        .getId());
-
-        return slist
-                .stream()
-                .map(SubjectResponse::new)
-                .toList();
-    }
 }

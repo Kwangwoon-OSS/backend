@@ -27,7 +27,6 @@ public class Subject {
     @JoinColumn(name = "department_id")
     private Department department;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professor_id")
     private Professor professor;

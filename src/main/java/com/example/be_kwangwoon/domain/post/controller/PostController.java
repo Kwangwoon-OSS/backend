@@ -6,6 +6,7 @@ import com.example.be_kwangwoon.domain.post.dto.PostResponse;
 import com.example.be_kwangwoon.domain.post.dto.UpdatePostRequest;
 import com.example.be_kwangwoon.domain.post.service.PostService;
 import com.example.be_kwangwoon.domain.subject.domain.Subject;
+import com.example.be_kwangwoon.domain.subject.dto.SubjectResponse;
 import com.example.be_kwangwoon.domain.user.domain.User;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -82,4 +83,27 @@ public class PostController {
                 .body(post);
     }
 
+    @CrossOrigin
+    @GetMapping("/posts/filter/{semesterId}")
+    public ResponseEntity<List<PostResponse>> findAllPostBySemester(@PathVariable Long semesterId) {
+        List<PostResponse> list = postService.findAllPostBySemester(semesterId);
+        return ResponseEntity.ok()
+                .body(list);
+    }
+
+    @CrossOrigin
+    @GetMapping("/posts/filter2/{departmentId}")
+    public ResponseEntity<List<PostResponse>> findAllPostByDepartment(@PathVariable Long departmentId) {
+        List<PostResponse> list = postService.findAllPostByDepartment(departmentId);
+        return ResponseEntity.ok()
+                .body(list);
+    }
+
+    @CrossOrigin
+    @GetMapping("/posts/filter3/{subjectmentName}")
+    public ResponseEntity<List<PostResponse>> findAllPostBySubject(@PathVariable String subjectmentName) {
+        List<PostResponse> list = postService.findAllPostBySubject(subjectmentName);
+        return ResponseEntity.ok()
+                .body(list);
+    }
 }

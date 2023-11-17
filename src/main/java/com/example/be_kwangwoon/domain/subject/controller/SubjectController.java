@@ -6,10 +6,7 @@ import com.example.be_kwangwoon.domain.subject.dto.SubjectResponse;
 import com.example.be_kwangwoon.domain.subject.service.SubjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,11 +24,4 @@ public class SubjectController {
                 .body(list);
     }
 
-    @CrossOrigin
-    @GetMapping("/subjectbysemester")
-    public ResponseEntity<List<SubjectResponse>> findAllSubjectBySemester(@RequestBody FindSubjectBySemesterRequest findSubjectBySemesterRequest) {
-        List<SubjectResponse> list = subjectService.findAllSubjectBySemester(findSubjectBySemesterRequest);
-        return ResponseEntity.ok()
-                .body(list);
-    }
 }

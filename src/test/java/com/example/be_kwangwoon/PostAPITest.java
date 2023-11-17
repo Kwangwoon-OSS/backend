@@ -176,7 +176,7 @@ public class PostAPITest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].content").value(savedPost.getContent()))
                 .andExpect(jsonPath("$[0].title").value(savedPost.getTitle()));
-                //.andExpect(jsonPath("$[0].type").value(savedPost.getType()))
+        //.andExpect(jsonPath("$[0].type").value(savedPost.getType()))
     }
 
     @DisplayName("deletePost: 아티클 삭제에 성공한다.")
@@ -211,7 +211,7 @@ public class PostAPITest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").value(savedArticle.getContent()))
                 .andExpect(jsonPath("$.title").value(savedArticle.getTitle()));
-                //.andExpect(jsonPath("$.type").value(savedArticle.getType()))
+        //.andExpect(jsonPath("$.type").value(savedArticle.getType()))
     }
 
 //    @DisplayName("updatePost: 아티클 수정에 성공한다.")
@@ -553,10 +553,10 @@ public class PostAPITest {
      */
 
 
-    @DisplayName("findSubjectBySemester: subject/department/semester 목록을 불러오는데 성공")
+    @DisplayName("findPostBySemester: =semester로 Post 목록을 불러오는데 성공")
     @Test
-    public void findSubjectBySemester() throws Exception {
-        final String url = "/subjectbysemester";
+    public void findPostBySemester() throws Exception {
+        final String url = "/posts/filter/{semesterId}";
 
         subjectRepository.deleteAll();
 
@@ -570,29 +570,72 @@ public class PostAPITest {
         subjectRepository.save(sb1);
         subjectRepository.save(sb2);
 
-        FindSubjectBySemesterRequest findSubjectBySemesterRequest = new FindSubjectBySemesterRequest(2023, 2);
+        Post post = createDefaultPost(LocalDateTime.MIN);
 
-        String requestBody = objectMapper.writeValueAsString(findSubjectBySemesterRequest);
-
-        ResultActions resultActions = mockMvc.perform(get(url)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(requestBody));
+        ResultActions resultActions = mockMvc.perform(get(url, semester.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value(sb1.getName()))
-                .andExpect(jsonPath("$[0].code").value(sb1.getCode()))
-                .andExpect(jsonPath("$[0].departments_name").value(department.getName()))
-                .andExpect(jsonPath("$[0].professors_name").value(professor.getName()))
-                .andExpect(jsonPath("$[0].semesters_years").value(semester.getYears()))
-                .andExpect(jsonPath("$[0].semesters_semester").value(semester.getSemester()))
-                .andExpect(jsonPath("$[1].name").value(sb2.getName()))
-                .andExpect(jsonPath("$[1].code").value(sb2.getCode()))
-                .andExpect(jsonPath("$[1].departments_name").value(department.getName()))
-                .andExpect(jsonPath("$[1].professors_name").value(professor.getName()))
-                .andExpect(jsonPath("$[1].semesters_years").value(semester.getYears()))
-                .andExpect(jsonPath("$[1].semesters_semester").value(semester.getSemester()));
+                .andExpect(jsonPath("$[0].title").value(post.getTitle()))
+                .andExpect(jsonPath("$[0].content").value(post.getContent()));
+    }
 
+
+    @DisplayName("findPostByDepartment: department로 post 목록을 불러오는데 성공")
+    @Test
+    public void findPostByDepartment() throws Exception {
+        final String url = "/posts/filter2/{departmentId}";
+
+        subjectRepository.deleteAll();
+
+        Department department = departmentRepository.save(new Department("software"));
+        Professor professor = professorRepository.save(new Professor("harry", department));
+        Semester semester = semesterRepository.save(new Semester("2023", "2"));
+
+        sb1 = new Subject("math", "0000", department, semester, professor);
+        sb2 = new Subject("English", "0001", department, semester, professor);
+
+        subjectRepository.save(sb1);
+        subjectRepository.save(sb2);
+
+        Post post = createDefaultPost(LocalDateTime.MIN);
+
+        ResultActions resultActions = mockMvc.perform(get(url, department.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value(post.getTitle()))
+                .andExpect(jsonPath("$[0].content").value(post.getContent()));
+    }
+
+    @DisplayName("findPostBySubjectName: SubjectName로 post 목록을 불러오는데 성공")
+    @Test
+    public void findPostBySubjectName() throws Exception {
+        final String url = "/posts/filter3/{subjectmentName}";
+
+        subjectRepository.deleteAll();
+
+        Department department = departmentRepository.save(new Department("software"));
+        Professor professor = professorRepository.save(new Professor("harry", department));
+        Semester semester = semesterRepository.save(new Semester("2023", "2"));
+
+        sb1 = new Subject("math", "0000", department, semester, professor);
+        sb2 = new Subject("English", "0001", department, semester, professor);
+
+        subjectRepository.save(sb1);
+        subjectRepository.save(sb2);
+
+        Post post = createDefaultPost(LocalDateTime.MIN);
+
+        ResultActions resultActions = mockMvc.perform(get(url, sb1.getName())
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value(post.getTitle()))
+                .andExpect(jsonPath("$[0].content").value(post.getContent()));
     }
 
     @DisplayName("add/deletebookmarkbypostId: bookmark를  불러오고 삭제하는데 성공")
