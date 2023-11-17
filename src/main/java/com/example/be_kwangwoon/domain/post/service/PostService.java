@@ -67,7 +67,13 @@ public class PostService {
             Post post = null;
             try {
                 post = postRepository.findBySubject_id(subject.getId());
-            }catch (Exception e){}
+            }catch (IllegalArgumentException e){
+                e.printStackTrace();
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             if (post != null)
                 plist.add(post);
         }
@@ -85,7 +91,13 @@ public class PostService {
             Post post = null;
             try {
                 post = postRepository.findBySubject_id(subject.getId());
-            }catch (Exception e){}
+            }catch (IllegalArgumentException e){
+                e.printStackTrace();
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             if (post != null)
                 plist.add(post);
         }
@@ -102,7 +114,13 @@ public class PostService {
             Post post = null;
             try {
                 post = postRepository.findBySubject_id(subject.getId());
-            }catch (Exception e){}
+            }catch (IllegalArgumentException e){
+                e.printStackTrace();
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             if (post != null)
                 plist.add(post);
         }
