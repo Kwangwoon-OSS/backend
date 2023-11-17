@@ -69,11 +69,11 @@ public class PostService {
             Post post = null;
             try {
                 post = postRepository.findBySubject_id(subject.getId());
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             if (post != null)
@@ -93,11 +93,11 @@ public class PostService {
             Post post = null;
             try {
                 post = postRepository.findBySubject_id(subject.getId());
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             if (post != null)
@@ -110,11 +110,14 @@ public class PostService {
     }
 
     public List<PostResponse> findAllPostBySubject(String subejectName) {
+        /*
         try {
             subejectName = URLDecoder.decode(subejectName, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
+         */
 
         List<Subject> slist = subjectRepository.findByName(subejectName);
         List<Post> plist = new ArrayList<>();
@@ -122,11 +125,11 @@ public class PostService {
             Post post = null;
             try {
                 post = postRepository.findBySubject_id(subject.getId());
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             if (post != null)
