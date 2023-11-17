@@ -43,14 +43,12 @@ public class UserController {
 
     @CrossOrigin
     @Operation(summary = "로그인")
-    @ApiResponse(responseCode = "200", description = "로그인")
+    @ApiResponse(responseCode = "200", description = "로그인", content = @Content(schema = @Schema(implementation = TokenResponse.class)))
     @PostMapping("/login")
-    public ResponseEntity<Void> signUp(@RequestBody UserLoginRequest userLoginRequest) {
+    public ResponseEntity<TokenResponse> signUp(@RequestBody UserLoginRequest userLoginRequest) {
         User user = userService.login(userLoginRequest);
-        HttpHeaders headers = new HttpHeaders();
         String accessToken = jwtProvider.createAccessToken(user);
-        headers.add(HttpHeaders.AUTHORIZATION, accessToken);
-        return ResponseEntity.ok().headers(headers).build();
+        return ResponseEntity.ok(TokenResponse.builder().accessToken(accessToken).build());
     }
 
     @CrossOrigin
@@ -75,7 +73,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "내 프로필 조회 성공", content = @Content(schema = @Schema(implementation = UserProfileResponse.class)))
     @GetMapping("/profile")
     public ResponseEntity<UserProfileResponse> profile(@AuthenticationPrincipal User user) {
-        if(userService.existsProfile(user.getId())){
+        if (userService.existsProfile(user.getId())) {
             return ResponseEntity.ok(UserProfileResponse.from(userService.findById(user.getId())));
         }
         throw new CustomException(ExceptionCode.PROFILE_NOT_FOUND);
