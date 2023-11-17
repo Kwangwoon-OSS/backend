@@ -2,6 +2,7 @@ package com.example.be_kwangwoon.domain.post.controller;
 
 import com.example.be_kwangwoon.domain.post.domain.Post;
 import com.example.be_kwangwoon.domain.post.dto.AddPostRequest;
+import com.example.be_kwangwoon.domain.post.dto.FindPostBySubjectRequest;
 import com.example.be_kwangwoon.domain.post.dto.PostResponse;
 import com.example.be_kwangwoon.domain.post.dto.UpdatePostRequest;
 import com.example.be_kwangwoon.domain.post.service.PostService;
@@ -103,17 +104,19 @@ public class PostController {
                 .body(list);
     }
 
+    /*
     @CrossOrigin
     @GetMapping("/posts/filter3/{subjectName}")
     public ResponseEntity<List<PostResponse>> findAllPostBySubject(@PathVariable String subjectName) {
-        String decodedString = "";
-        try {
-            decodedString = URLDecoder.decode(subjectName, "UTF-8");
-            System.out.println(decodedString);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        List<PostResponse> list = postService.findAllPostBySubject(decodedString);
+        List<PostResponse> list = postService.findAllPostBySubject(subjectName);
+        return ResponseEntity.ok()
+                .body(list);
+    }
+    */
+    @CrossOrigin
+    @GetMapping("/posts/filter3")
+    public ResponseEntity<List<PostResponse>> findAllPostBySubject(@RequestBody FindPostBySubjectRequest findPostBySubjectRequest) {
+        List<PostResponse> list = postService.findAllPostBySubject(findPostBySubjectRequest.getName());
         return ResponseEntity.ok()
                 .body(list);
     }

@@ -14,6 +14,7 @@ import com.example.be_kwangwoon.domain.post.domain.Post;
 import com.example.be_kwangwoon.domain.post.domain.Status;
 import com.example.be_kwangwoon.domain.post.domain.Type;
 import com.example.be_kwangwoon.domain.post.dto.AddPostRequest;
+import com.example.be_kwangwoon.domain.post.dto.FindPostBySubjectRequest;
 import com.example.be_kwangwoon.domain.post.dto.UpdatePostRequest;
 import com.example.be_kwangwoon.domain.post.repository.PostRepository;
 import com.example.be_kwangwoon.domain.professor.domain.Professor;
@@ -614,7 +615,8 @@ public class PostAPITest {
     @DisplayName("findPostBySubjectName: SubjectName로 post 목록을 불러오는데 성공")
     @Test
     public void findPostBySubjectName() throws Exception {
-        final String url = "/posts/filter3/{subjectmentName}";
+        //"/posts/filter3/{subjectmentName}"
+        final String url = "/posts/filter3";
 
         subjectRepository.deleteAll();
 
@@ -628,10 +630,16 @@ public class PostAPITest {
         subjectRepository.save(sb1);
         subjectRepository.save(sb2);
 
+        FindPostBySubjectRequest request = new FindPostBySubjectRequest("인공지능");
+
+        String requestBody = objectMapper.writeValueAsString(request);
+
         Post post = createDefaultPost(LocalDateTime.MIN);
 
-        ResultActions resultActions = mockMvc.perform(get(url, "%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5")
-                .contentType(MediaType.APPLICATION_JSON_VALUE));
+        //, "%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5"
+        ResultActions resultActions = mockMvc.perform(get(url)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(requestBody));
 
         resultActions
                 .andExpect(status().isOk())
