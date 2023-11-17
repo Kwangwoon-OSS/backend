@@ -60,7 +60,6 @@ public class PostService {
         return post;
     }
 
-    @Transactional
     public List<PostResponse> findAllPostBySemester(Long semesterId) {
         List<Subject> slist = subjectRepository.findBySemester_id(semesterId);
         List<Post> plist = new ArrayList<>();
@@ -76,7 +75,6 @@ public class PostService {
                 .toList();
     }
 
-    @Transactional
     public List<PostResponse> findAllPostByDepartment(Long departmentId) {
         List<Subject> slist = subjectRepository.findByDepartment_id(departmentId);
         List<Post> plist = new ArrayList<>();
@@ -91,7 +89,6 @@ public class PostService {
                 .toList();
     }
 
-    @Transactional
     public List<PostResponse> findAllPostBySubject(String subejectName) {
         List<Subject> slist = subjectRepository.findByName(subejectName);
         List<Post> plist = new ArrayList<>();
