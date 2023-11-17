@@ -64,7 +64,10 @@ public class PostService {
         List<Subject> slist = subjectRepository.findBySemester_id(semesterId);
         List<Post> plist = new ArrayList<>();
         for (Subject subject : slist) {
-            Post post = postRepository.findBySubject_id(subject.getId());
+            Post post = null;
+            try {
+                post = postRepository.findBySubject_id(subject.getId());
+            }catch (Exception e){}
             if (post != null)
                 plist.add(post);
         }
@@ -79,7 +82,10 @@ public class PostService {
         List<Subject> slist = subjectRepository.findByDepartment_id(departmentId);
         List<Post> plist = new ArrayList<>();
         for (Subject subject : slist) {
-            Post post = postRepository.findBySubject_id(subject.getId());
+            Post post = null;
+            try {
+                post = postRepository.findBySubject_id(subject.getId());
+            }catch (Exception e){}
             if (post != null)
                 plist.add(post);
         }
@@ -93,7 +99,10 @@ public class PostService {
         List<Subject> slist = subjectRepository.findByName(subejectName);
         List<Post> plist = new ArrayList<>();
         for (Subject subject : slist) {
-            Post post = postRepository.findBySubject_id(subject.getId());
+            Post post = null;
+            try {
+                post = postRepository.findBySubject_id(subject.getId());
+            }catch (Exception e){}
             if (post != null)
                 plist.add(post);
         }
