@@ -610,7 +610,7 @@ public class PostAPITest {
                 .andExpect(jsonPath("$[0].content").value(post.getContent()));
     }
 
-    /*
+
     @DisplayName("findPostBySubjectName: SubjectName로 post 목록을 불러오는데 성공")
     @Test
     public void findPostBySubjectName() throws Exception {
@@ -622,7 +622,7 @@ public class PostAPITest {
         Professor professor = professorRepository.save(new Professor("harry", department));
         Semester semester = semesterRepository.save(new Semester("2023", "2"));
 
-        sb1 = new Subject("오픈소스소프트웨어실습", "0000", department, semester, professor);
+        sb1 = new Subject("인공지능", "0000", department, semester, professor);
         sb2 = new Subject("English", "0001", department, semester, professor);
 
         subjectRepository.save(sb1);
@@ -630,7 +630,7 @@ public class PostAPITest {
 
         Post post = createDefaultPost(LocalDateTime.MIN);
 
-        ResultActions resultActions = mockMvc.perform(get(url, sb1.getName())
+        ResultActions resultActions = mockMvc.perform(get(url, "%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5")
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         resultActions
@@ -638,7 +638,7 @@ public class PostAPITest {
                 .andExpect(jsonPath("$[0].title").value(post.getTitle()))
                 .andExpect(jsonPath("$[0].content").value(post.getContent()));
     }
-     */
+
 
     @DisplayName("add/deletebookmarkbypostId: bookmark를  불러오고 삭제하는데 성공")
     @Test

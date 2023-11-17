@@ -17,6 +17,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -104,8 +106,13 @@ public class PostController {
     @CrossOrigin
     @GetMapping("/posts/filter3/{subjectName}")
     public ResponseEntity<List<PostResponse>> findAllPostBySubject(@PathVariable String subjectName) {
-        ByteBuffer byteBuffer = ByteBuffer.wrap(subjectName.getBytes());
-        String decodedString = StandardCharsets.UTF_8.decode(byteBuffer).toString();
+        String decodedString = "";
+        try {
+            decodedString = URLDecoder.decode(subjectName, "UTF-8");
+            System.out.println(decodedString);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         List<PostResponse> list = postService.findAllPostBySubject(decodedString);
         return ResponseEntity.ok()
                 .body(list);
