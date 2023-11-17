@@ -12,7 +12,7 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
     @Bean
-    public CorsConfigurationSource configurationSource() {
+     CorsConfigurationSource  configurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowCredentials(true);
         corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5500", "http://127.0.0.1:5500", "https://kw-teamhub.netlify.app"));
