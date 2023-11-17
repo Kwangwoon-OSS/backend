@@ -148,5 +148,4 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(EmailVerifyResponse.from(false));
     }
-
 }

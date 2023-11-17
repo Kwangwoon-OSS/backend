@@ -616,7 +616,7 @@ public class PostAPITest {
     @Test
     public void findPostBySubjectName() throws Exception {
         //"/posts/filter3/{subjectmentName}"
-        final String url = "/posts/filter3";
+        final String url = "/posts/filter3/{subjectmentName}";
 
         subjectRepository.deleteAll();
 
@@ -630,16 +630,16 @@ public class PostAPITest {
         subjectRepository.save(sb1);
         subjectRepository.save(sb2);
 
-        FindPostBySubjectRequest request = new FindPostBySubjectRequest("인공지능");
+       // FindPostBySubjectRequest request = new FindPostBySubjectRequest("인공지능");
 
-        String requestBody = objectMapper.writeValueAsString(request);
+//        String requestBody = objectMapper.writeValueAsString(request);
 
         Post post = createDefaultPost(LocalDateTime.MIN);
 
         //, "%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5"
-        ResultActions resultActions = mockMvc.perform(post(url)
+        ResultActions resultActions = mockMvc.perform(get(url, "%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(requestBody));
+               );
 
         resultActions
                 .andExpect(status().isOk())
@@ -652,7 +652,7 @@ public class PostAPITest {
     @Test
     public void add_deleteBookmark() throws Exception {
         final String url = "/posts/{postId}/interest";
-        System.out.println(1);
+
         Post post = createDefaultPost(LocalDateTime.MIN);
         Bookmark bookmark = bookmarkRepository.save(new Bookmark(user, post));
 

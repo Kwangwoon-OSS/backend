@@ -104,7 +104,7 @@ public class PostController {
                 .body(list);
     }
 
-    /*
+
     @CrossOrigin
     @GetMapping("/posts/filter3/{subjectName}")
     public ResponseEntity<List<PostResponse>> findAllPostBySubject(@PathVariable String subjectName) {
@@ -112,7 +112,9 @@ public class PostController {
         return ResponseEntity.ok()
                 .body(list);
     }
-    */
+
+
+    /*
     @CrossOrigin
     @PostMapping("/posts/filter3")
     public ResponseEntity<List<PostResponse>> findAllPostBySubject(@RequestBody FindPostBySubjectRequest findPostBySubjectRequest) {
@@ -120,4 +122,5 @@ public class PostController {
         return ResponseEntity.ok()
                 .body(list);
     }
+     */
 }
