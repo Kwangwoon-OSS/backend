@@ -115,7 +115,7 @@ public class PostController {
 
 
     @CrossOrigin
-    @Operation(summary = "과목 이름별로 과목 목록 가져오기(미작동)")
+    @Operation(summary = "과목 이름별로 과목 목록 가져오기")
     @GetMapping("/posts/filter3/{subjectName}")
     public ResponseEntity<List<PostResponse>> findAllPostBySubject(@PathVariable String subjectName) {
         List<PostResponse> list = postService.findAllPostBySubject(subjectName);
