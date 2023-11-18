@@ -66,9 +66,9 @@ public class PostService {
         List<Subject> slist = subjectRepository.findBySemester_id(semesterId);
         List<Post> plist = new ArrayList<>();
         for (Subject subject : slist) {
-            Post post = null;
+            List<Post> list = null;
             try {
-                post = postRepository.findBySubject_id(subject.getId());
+                list = postRepository.findBySubject_id(subject.getId());
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             } catch (NullPointerException e) {
@@ -76,8 +76,9 @@ public class PostService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (post != null)
-                plist.add(post);
+            if (list != null)
+                for (Post post : list)
+                    plist.add(post);
         }
 
         return plist
@@ -90,9 +91,9 @@ public class PostService {
         List<Subject> slist = subjectRepository.findByDepartment_id(departmentId);
         List<Post> plist = new ArrayList<>();
         for (Subject subject : slist) {
-            Post post = null;
+            List<Post> list = null;
             try {
-                post = postRepository.findBySubject_id(subject.getId());
+                list = postRepository.findBySubject_id(subject.getId());
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             } catch (NullPointerException e) {
@@ -100,8 +101,9 @@ public class PostService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (post != null)
-                plist.add(post);
+            if (list != null)
+                for (Post post : list)
+                    plist.add(post);
         }
         return plist
                 .stream()
@@ -122,9 +124,9 @@ public class PostService {
         List<Subject> slist = subjectRepository.findByName(subejectName);
         List<Post> plist = new ArrayList<>();
         for (Subject subject : slist) {
-            Post post = null;
+            List<Post> list = null;
             try {
-                post = postRepository.findBySubject_id(subject.getId());
+                list = postRepository.findBySubject_id(subject.getId());
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             } catch (NullPointerException e) {
@@ -132,8 +134,9 @@ public class PostService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (post != null)
-                plist.add(post);
+            if (list != null)
+                for (Post post : list)
+                    plist.add(post);
         }
         return plist
                 .stream()

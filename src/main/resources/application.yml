@@ -2,7 +2,3 @@ spring:
   profiles:
     active: dev
 
-# application.yml
-server:
-  tomcat:
-    uri-encoding: UTF-8

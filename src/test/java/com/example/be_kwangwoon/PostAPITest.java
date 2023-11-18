@@ -5,7 +5,6 @@ import com.example.be_kwangwoon.domain.bookmark.repository.BookmarkRepository;
 import com.example.be_kwangwoon.domain.comment.domain.Comment;
 import com.example.be_kwangwoon.domain.comment.domain.Used;
 import com.example.be_kwangwoon.domain.comment.dto.AddCommentRequest;
-import com.example.be_kwangwoon.domain.comment.dto.CommentResponse;
 import com.example.be_kwangwoon.domain.comment.dto.UpdateCommentRequest;
 import com.example.be_kwangwoon.domain.comment.repository.CommentRepository;
 import com.example.be_kwangwoon.domain.department.domain.Department;
@@ -13,8 +12,6 @@ import com.example.be_kwangwoon.domain.department.repository.DepartmentRepositor
 import com.example.be_kwangwoon.domain.post.domain.Post;
 import com.example.be_kwangwoon.domain.post.domain.Status;
 import com.example.be_kwangwoon.domain.post.domain.Type;
-import com.example.be_kwangwoon.domain.post.dto.AddPostRequest;
-import com.example.be_kwangwoon.domain.post.dto.FindPostBySubjectRequest;
 import com.example.be_kwangwoon.domain.post.dto.UpdatePostRequest;
 import com.example.be_kwangwoon.domain.post.repository.PostRepository;
 import com.example.be_kwangwoon.domain.professor.domain.Professor;
@@ -22,13 +19,11 @@ import com.example.be_kwangwoon.domain.professor.repository.ProfessorRepository;
 import com.example.be_kwangwoon.domain.semester.domain.Semester;
 import com.example.be_kwangwoon.domain.semester.repository.SemesterRepository;
 import com.example.be_kwangwoon.domain.subject.domain.Subject;
-import com.example.be_kwangwoon.domain.subject.dto.FindSubjectBySemesterRequest;
 import com.example.be_kwangwoon.domain.subject.repository.SubjectRepository;
 import com.example.be_kwangwoon.domain.user.domain.Certification;
 import com.example.be_kwangwoon.domain.user.domain.User;
 import com.example.be_kwangwoon.domain.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,15 +36,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -215,41 +207,42 @@ public class PostAPITest {
         //.andExpect(jsonPath("$.type").value(savedArticle.getType()))
     }
 
-//    @DisplayName("updatePost: 아티클 수정에 성공한다.")
-//    @Test
-//    public void updatePost() throws Exception {
-//        // given
-//        final String url = "/posts/{id}";
-//        Post savedArticle = createDefaultPost(LocalDateTime.MAX);
-//
-//        final String newTitle = "new title";
-//        final String newContent = "new content";
-//        final Status status = Status.INACTIVE;
-//        final LocalDateTime deadline = LocalDateTime.MAX;
-//        final String contact = "000";
-//        final int people = 0;
-//        final Long subjectId = (long) 6;
-//
-//
-//        UpdatePostRequest request = new UpdatePostRequest(newTitle, newContent, status, deadline, contact, people, subjectId);
-//
-//        // when
-//        ResultActions result = mockMvc.perform(put(url, savedArticle.getId())
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .content(objectMapper.writeValueAsString(request)));
-//
-//        // then
-//        //result.andExpect(status().isOk());
-//
-//        Post article = postRepository.findById(savedArticle.getId()).get();
-//
-//        assertThat(article.getTitle()).isEqualTo(newTitle);
-//        assertThat(article.getContent()).isEqualTo(newContent);
-//        assertThat(article.getStatus()).isEqualTo(status);
-//        //assertThat(article.getDeadline()).isEqualTo(deadline); db에서 저장되는 값과 java에서 출력하는 값이 다르게 나옴. 올바르게 진행됐어서 오류 표출
-//        assertThat(article.getContact()).isEqualTo(contact);
-//        assertThat(article.getPeople()).isEqualTo(people);
-//    }
+    @DisplayName("updatePost: 아티클 수정에 성공한다.")
+    @Test
+    public void updatePost() throws Exception {
+        // given
+        final String url = "/posts/{id}";
+        Post savedArticle = createDefaultPost(LocalDateTime.MAX);
+
+        final String newTitle = "new title";
+        final String newContent = "new content";
+        final Status status = Status.INACTIVE;
+        final Type type = Type.STUDY;
+        final LocalDateTime deadline = LocalDateTime.MAX;
+        final String contact = "000";
+        final int people = 0;
+        final Long subjectId = sb1.getId();
+
+
+        UpdatePostRequest request = new UpdatePostRequest(newTitle, newContent, status, type, deadline, contact, people, subjectId);
+
+        // when
+        ResultActions result = mockMvc.perform(put(url, savedArticle.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request)));
+
+        // then
+        //result.andExpect(status().isOk());
+
+        Post article = postRepository.findById(savedArticle.getId()).get();
+
+        assertThat(article.getTitle()).isEqualTo(newTitle);
+        assertThat(article.getContent()).isEqualTo(newContent);
+        assertThat(article.getStatus()).isEqualTo(status);
+        //assertThat(article.getDeadline()).isEqualTo(deadline); db에서 저장되는 값과 java에서 출력하는 값이 다르게 나옴. 올바르게 진행됐어서 오류 표출
+        assertThat(article.getContact()).isEqualTo(contact);
+        assertThat(article.getPeople()).isEqualTo(people);
+    }
 
 
     @DisplayName("findNewPosts: 최근에 추가된 아티클들을 가져오는데 성공")
@@ -470,7 +463,7 @@ public class PostAPITest {
         assertThat(comments).isEmpty();
     }
 
-    /*
+
     @DisplayName("findAllSubject/department/semester: subject/department/semester 목록을 불러오는데 성공")
     @Test
     public void findAllSubject_Department_Semester() throws Exception {
@@ -505,7 +498,7 @@ public class PostAPITest {
                 .andExpect(jsonPath("$[1].professors_name").value(professor.getName()))
                 .andExpect(jsonPath("$[1].semesters_years").value(semester.getYears()))
                 .andExpect(jsonPath("$[1].semesters_semester").value(semester.getSemester()));
-
+/*
         url = "/department";
 
         resultActions = mockMvc.perform(get(url)
@@ -526,15 +519,11 @@ public class PostAPITest {
                 .andExpect(jsonPath("$[1].years").value(semester.getYears()))
                 .andExpect(jsonPath("$[1].semester").value(semester.getSemester()));
 
-        url = "/subjectbysemester";
+ */
+        url = "/subject/filter/{semesterId}";
 
-        FindSubjectBySemesterRequest findSubjectBySemesterRequest = new FindSubjectBySemesterRequest(semester.getYears(), semester.getSemester());
-
-        String requestBody = objectMapper.writeValueAsString(findSubjectBySemesterRequest);
-
-        resultActions = mockMvc.perform(get(url)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(requestBody));
+        resultActions = mockMvc.perform(get(url, semester.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         resultActions
                 .andExpect(status().isOk())
@@ -551,7 +540,6 @@ public class PostAPITest {
                 .andExpect(jsonPath("$[1].semesters_years").value(semester.getYears()))
                 .andExpect(jsonPath("$[1].semesters_semester").value(semester.getSemester()));
     }
-     */
 
 
     @DisplayName("findPostBySemester: =semester로 Post 목록을 불러오는데 성공")
@@ -630,16 +618,18 @@ public class PostAPITest {
         subjectRepository.save(sb1);
         subjectRepository.save(sb2);
 
-       // FindPostBySubjectRequest request = new FindPostBySubjectRequest("인공지능");
+        // FindPostBySubjectRequest request = new FindPostBySubjectRequest("인공지능");
 
-//        String requestBody = objectMapper.writeValueAsString(request);
+        // String requestBody = objectMapper.writeValueAsString(request);
 
         Post post = createDefaultPost(LocalDateTime.MIN);
-
+        Post post2 = createDefaultPost(LocalDateTime.MIN);
+        Post post3 = createDefaultPost(LocalDateTime.MIN);
+        Post post4 = createDefaultPost(LocalDateTime.MIN);
         //, "%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5"
         ResultActions resultActions = mockMvc.perform(get(url, "인공지능")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-               );
+        );
 
         resultActions
                 .andExpect(status().isOk())
