@@ -21,7 +21,11 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -66,18 +70,19 @@ public class PostService {
         List<Subject> slist = subjectRepository.findBySemester_id(semesterId);
         List<Post> plist = new ArrayList<>();
         for (Subject subject : slist) {
-            Post post = null;
+            List<Post> list = null;
             try {
-                post = postRepository.findBySubject_id(subject.getId());
-            }catch (IllegalArgumentException e){
+                list = postRepository.findBySubject_id(subject.getId());
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (post != null)
-                plist.add(post);
+            if (list != null)
+                for (Post post : list)
+                    plist.add(post);
         }
 
         return plist
@@ -90,18 +95,19 @@ public class PostService {
         List<Subject> slist = subjectRepository.findByDepartment_id(departmentId);
         List<Post> plist = new ArrayList<>();
         for (Subject subject : slist) {
-            Post post = null;
+            List<Post> list = null;
             try {
-                post = postRepository.findBySubject_id(subject.getId());
-            }catch (IllegalArgumentException e){
+                list = postRepository.findBySubject_id(subject.getId());
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (post != null)
-                plist.add(post);
+            if (list != null)
+                for (Post post : list)
+                    plist.add(post);
         }
         return plist
                 .stream()
@@ -110,29 +116,22 @@ public class PostService {
     }
 
     public List<PostResponse> findAllPostBySubject(String subejectName) {
-        /*
-        try {
-            subejectName = URLDecoder.decode(subejectName, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-         */
         List<Subject> slist = subjectRepository.findByName(subejectName);
         List<Post> plist = new ArrayList<>();
         for (Subject subject : slist) {
-            Post post = null;
+            List<Post> list = null;
             try {
-                post = postRepository.findBySubject_id(subject.getId());
-            }catch (IllegalArgumentException e){
+                list = postRepository.findBySubject_id(subject.getId());
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (post != null)
-                plist.add(post);
+            if (list != null)
+                for (Post post : list)
+                    plist.add(post);
         }
         return plist
                 .stream()
@@ -146,9 +145,22 @@ public class PostService {
 
 
     public List<Post> findNewPost() {
-        List<Post> list = postRepository.findAll(PageRequest.of(0, 6, Sort.by("createAt").descending())).
-                stream().
-                toList();
+        List<Post> plist = postRepository.findAll();
+        Collections.sort(plist, new Comparator<Post>() {
+            @Override
+            public int compare(Post o1, Post o2) {
+                long o2l = o2.getCreateAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();;
+                long o1l =  o1.getCreateAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();;
+                return (int)(o2l - o1l);
+            }
+        });
+        List<Post> list = new ArrayList<>();
+        for(Post post : plist) {
+            if(list.size() == 6)
+                break;
+            if(post.getCreateAt().isBefore(post.getDeadline()))
+                list.add(post);
+        }
         return list;
     }
 

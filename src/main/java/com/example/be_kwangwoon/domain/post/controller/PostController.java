@@ -10,6 +10,7 @@ import com.example.be_kwangwoon.domain.subject.domain.Subject;
 import com.example.be_kwangwoon.domain.subject.dto.SubjectResponse;
 import com.example.be_kwangwoon.domain.user.domain.User;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,7 @@ public class PostController {
     private final PostService postService;
 
     @CrossOrigin
+    @Operation(summary = "게시글 등록하기")
     @PostMapping("/posts")
     public ResponseEntity<Void> addPost(@RequestBody AddPostRequest request, @AuthenticationPrincipal User user) {
         postService.addPost(request, user.getId());
@@ -41,6 +43,7 @@ public class PostController {
     }
 
     @CrossOrigin
+    @Operation(summary = "게시글 수정하기")
     @PutMapping("/posts/{id}")
     public ResponseEntity<Void> updatePost(@PathVariable long id,
                                            @RequestBody UpdatePostRequest request, @AuthenticationPrincipal User user) {
@@ -51,6 +54,7 @@ public class PostController {
     }
 
     @CrossOrigin
+    @Operation(summary = "게시글 상세보기")
     @GetMapping("/posts/{id}")
     public ResponseEntity<PostResponse> findPost(@PathVariable long id) {
         Post post = postService.findPost(id);
@@ -59,6 +63,7 @@ public class PostController {
     }
 
     @CrossOrigin
+    @Operation(summary = "모든 게시글 리스트 보기")
     @GetMapping("/posts")
     public ResponseEntity<List<PostResponse>> findAllPost() {
         List<PostResponse> posts = postService.findAllPost()
@@ -70,6 +75,7 @@ public class PostController {
     }
 
     @CrossOrigin
+    @Operation(summary = "특정 게시글 삭제하기")
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable long id, @AuthenticationPrincipal User user) {
         postService.deletePost(id, user);
@@ -78,6 +84,7 @@ public class PostController {
     }
 
     @CrossOrigin
+    @Operation(summary = "최근에 올라온 게시글 리스트 가져오기")
     @GetMapping("/posts/newposts")
     public ResponseEntity<List<PostResponse>> findNewPost() {
         List<PostResponse> post = postService.findNewPost()
@@ -89,6 +96,7 @@ public class PostController {
     }
 
     @CrossOrigin
+    @Operation(summary = "학기별로 과목 목록 가져오기")
     @GetMapping("/posts/filter/{semesterId}")
     public ResponseEntity<List<PostResponse>> findAllPostBySemester(@PathVariable Long semesterId) {
         List<PostResponse> list = postService.findAllPostBySemester(semesterId);
@@ -97,6 +105,7 @@ public class PostController {
     }
 
     @CrossOrigin
+    @Operation(summary = "학과별로 과목 목록 가져오기")
     @GetMapping("/posts/filter2/{departmentId}")
     public ResponseEntity<List<PostResponse>> findAllPostByDepartment(@PathVariable Long departmentId) {
         List<PostResponse> list = postService.findAllPostByDepartment(departmentId);
@@ -104,15 +113,18 @@ public class PostController {
                 .body(list);
     }
 
-    /*
+
     @CrossOrigin
+    @Operation(summary = "과목 이름별로 과목 목록 가져오기")
     @GetMapping("/posts/filter3/{subjectName}")
     public ResponseEntity<List<PostResponse>> findAllPostBySubject(@PathVariable String subjectName) {
         List<PostResponse> list = postService.findAllPostBySubject(subjectName);
         return ResponseEntity.ok()
                 .body(list);
     }
-    */
+
+
+    /*
     @CrossOrigin
     @PostMapping("/posts/filter3")
     public ResponseEntity<List<PostResponse>> findAllPostBySubject(@RequestBody FindPostBySubjectRequest findPostBySubjectRequest) {
@@ -120,4 +132,5 @@ public class PostController {
         return ResponseEntity.ok()
                 .body(list);
     }
+     */
 }

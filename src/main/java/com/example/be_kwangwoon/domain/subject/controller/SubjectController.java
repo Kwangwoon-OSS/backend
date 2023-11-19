@@ -1,7 +1,5 @@
 package com.example.be_kwangwoon.domain.subject.controller;
 
-import com.example.be_kwangwoon.domain.subject.domain.Subject;
-import com.example.be_kwangwoon.domain.subject.dto.FindSubjectBySemesterRequest;
 import com.example.be_kwangwoon.domain.subject.dto.SubjectResponse;
 import com.example.be_kwangwoon.domain.subject.service.SubjectService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +18,14 @@ public class SubjectController {
     @GetMapping("/subject")
     public ResponseEntity<List<SubjectResponse>> findAllSubject() {
         List<SubjectResponse> list = subjectService.findAllSubject();
+        return ResponseEntity.ok()
+                .body(list);
+    }
+
+    @CrossOrigin
+    @GetMapping("/subject/filter/{semesterId}")
+    public ResponseEntity<List<SubjectResponse>> findAllSubjectBySemester(@PathVariable Long semesterId) {
+        List<SubjectResponse> list = subjectService.findAllSubjectBySemester(semesterId);
         return ResponseEntity.ok()
                 .body(list);
     }
