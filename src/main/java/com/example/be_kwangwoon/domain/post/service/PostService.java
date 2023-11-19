@@ -146,6 +146,7 @@ public class PostService {
 
     public List<Post> findNewPost() {
         List<Post> plist = postRepository.findAll();
+        List<Post> list = new ArrayList<>();
         Collections.sort(plist, new Comparator<Post>() {
             @Override
             public int compare(Post o1, Post o2) {
@@ -154,7 +155,7 @@ public class PostService {
                 return (int)(o2l - o1l);
             }
         });
-        List<Post> list = new ArrayList<>();
+
         for(Post post : plist) {
             if(list.size() == 6)
                 break;

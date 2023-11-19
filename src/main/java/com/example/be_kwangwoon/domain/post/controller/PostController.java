@@ -44,10 +44,10 @@ public class PostController {
 
     @CrossOrigin
     @Operation(summary = "게시글 수정하기")
-    @PutMapping("/posts/{id}")
-    public ResponseEntity<Void> updatePost(@PathVariable long id,
+    @PutMapping("/posts/{postid}")
+    public ResponseEntity<Void> updatePost(@PathVariable long postid,
                                            @RequestBody UpdatePostRequest request, @AuthenticationPrincipal User user) {
-        postService.updatePost(id, request, user);
+        postService.updatePost(postid, request, user);
 
         return ResponseEntity.ok()
                 .build();
@@ -55,9 +55,9 @@ public class PostController {
 
     @CrossOrigin
     @Operation(summary = "게시글 상세보기")
-    @GetMapping("/posts/{id}")
-    public ResponseEntity<PostResponse> findPost(@PathVariable long id) {
-        Post post = postService.findPost(id);
+    @GetMapping("/posts/{postid}")
+    public ResponseEntity<PostResponse> findPost(@PathVariable long postid) {
+        Post post = postService.findPost(postid);
         return ResponseEntity.ok()
                 .body(new PostResponse(post));
     }
@@ -76,9 +76,9 @@ public class PostController {
 
     @CrossOrigin
     @Operation(summary = "특정 게시글 삭제하기")
-    @DeleteMapping("/posts/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable long id, @AuthenticationPrincipal User user) {
-        postService.deletePost(id, user);
+    @DeleteMapping("/posts/{postid}")
+    public ResponseEntity<Void> deletePost(@PathVariable long postid, @AuthenticationPrincipal User user) {
+        postService.deletePost(postid, user);
         return ResponseEntity.ok()
                 .build();
     }
