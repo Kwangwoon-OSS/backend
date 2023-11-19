@@ -62,7 +62,7 @@ public class PostService {
     @Transactional
     public Post findPost(long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found : " + id));
-        post.updatePostviews();
+        //post.updatePostviews();
         return post;
     }
 
